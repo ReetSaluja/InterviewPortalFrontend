@@ -1,0 +1,121 @@
+
+*{
+  box-sizing: border-box; /*Content + padding + border */
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0; /* removes default spacing around page */
+  padding: 24px; /*space around content*/
+  background: #f3f4f6;
+}
+
+/*  form container  */
+.form-box {
+  width: 100%; /*container take whole horixontal space*/
+  max-width: 700px;    /* how wide the form can grow on big screens */
+  margin-left: 40px;   /* pushes form a bit from the very edge */
+}
+
+/* one row: label + input */
+.form-row {
+  display: flex; /*creates the side-by-side layout*/
+  align-items: center; /*This aligns items vertically in the center of the row.*/
+  gap: 16px;
+  margin-bottom: 18px; /*space below each row*/
+}
+
+/*  <Labels /> component */
+.form-row > :first-child { /*first element inside each .form-row*/
+  min-width: 200px;
+  font-size: 16px;
+  font-weight: 600; /*bolder*/
+  color: #111827;
+}
+
+/* inputs and select */
+.form-row input,
+.form-row select {
+  flex: 1; /*stretch to take up remaining space in the flex row.*/
+  padding: 10px 12px;
+  border-radius: 8px; /*Adds rounded corners (curved edges).*/
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  font-size: 15px;
+}
+
+.form-row input:focus, /*user clicks*/
+.form-row select:focus {
+  outline: none;
+  border-color: #2563eb; /*focused, the border becomes blue*/
+}
+
+/* ===== buttons row ===== */
+.btn-box {
+  margin-top: 12px;
+  margin-left: 245px;  /* line up with inputs on desktop */
+  display: flex;
+  gap: 12px; 
+  margin-top: 55px;          /* space between Save and Cancel */
+}
+
+/* styles to all <button> elements that are inside the .btn-box*/
+.btn-box button {
+  padding: 8px 24px;
+  border-radius: 6px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width:110px;
+}
+
+/* Save */
+.btn-box button:first-child {
+  background: #2563eb;
+  color: white;
+}
+
+/* Cancel */
+.btn-box button:last-child {
+  background: red;
+  color: white;
+}
+
+/*responsive*/
+@media (max-width: 640px) {/*only when the screen size is 640px wide or smaller.*/ 
+   body {
+    padding: 16px;
+  }
+
+  .form-box {
+    margin-left: 5;           /* no big left margin on small screens */
+    max-width: 100%;
+  }
+
+  /* stack label above input */
+  .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-row > :first-child {
+    min-width: 0;
+  }
+
+  .form-row input,
+  .form-row select {
+    width: 100%;
+  }
+
+  /* buttons stay side-by-side, aligned with inputs */
+  .btn-box {
+    margin-left: 0;
+    justify-content: flex-start; /*align items to the left*/
+    flex-wrap: nowrap; /*keep in one row*/
+  }
+
+  .btn-box button {
+    width: auto;
+  }
+}
