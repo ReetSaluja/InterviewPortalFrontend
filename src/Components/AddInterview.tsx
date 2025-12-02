@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from  "axios";
 import Labels, {
   candidateNameLabel,
   currentOrganizationLabel,
@@ -7,7 +8,10 @@ import Labels, {
   noticePeriodLabel,
 } from "./Constants";
 import "./AddInterview.css";
-import * as XLSX from "xlsx";
+import {toast,ToastContainer} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 interface InterviewFormData {
   CandidateName: string;
@@ -27,8 +31,8 @@ function AddInterview() {
     NoticePeriod: "",
   });
 
-  // Saves an array of form submissions.
-  const [allRows, setAllRows] = useState<InterviewFormData[]>([]);
+
+
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -41,35 +45,66 @@ function AddInterview() {
     });
   };
 
-  const handleSave = (event: React.FormEvent) => {
-    
+  const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // add current form to array.Creates a new array that includes previous data + newly filled formData.
-    const newRows = [...allRows, formData];
-    setAllRows(newRows);
 
-    // create Excel from all rows
-    const worksheet = XLSX.utils.json_to_sheet(newRows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    XLSX.writeFile(workbook, "interview-data.xlsx"); //  correct extension
 
-    // clear the form
-    setFormData({
-      CandidateName: "",
-      TotalExperience: "",
-      SkillSet: "",
-      CurrentOrganization: "",
-      NoticePeriod: "",
-    });
+      if(!formData.CandidateName.trim()){
+        toast.error("Candidate Name Missing");
+        return;
+      }
+      if(!formData.TotalExperience.trim()){
+        toast.error("Total Experience Missing")
+        return;
+      }
+      if(!formData.SkillSet.trim()){
+        toast.error("Please enter Skills")
+        return;
+      }
+      if(!formData.CurrentOrganization.trim()){
+        toast.error("Current Organization Missing")
+        return;
+      }
+      
+      
+      
+      
+      if(!formData.NoticePeriod.trim()){
+        toast.error("Please Select Notice Period")
+        return;
+      }
 
-    console.log("Form Submitted");
+
+
+      
+          try {
+      const response = await axios.post("http://127.0.0.1:8000/candidates/", formData);
+      console.log("Saved", response.data);
+       toast.success("Form Submitted");
+
+      
+
+      
+      setFormData({
+        CandidateName: "",
+        TotalExperience: "",
+        SkillSet: "",
+        CurrentOrganization: "",
+        NoticePeriod: "",
+      });
+
+      
+    } catch (err) {
+      toast.error("Error saving candidate");
+      console.error(err);
+    }
   };
 
   
 
   return (
+    <>
     <form className="form-box" onSubmit={handleSave}>
       <div className="form-row">
         <Labels text={candidateNameLabel} />
@@ -77,15 +112,18 @@ function AddInterview() {
           name="CandidateName"
           value={formData.CandidateName}
           onChange={handleChange}
+          
         />
       </div>
 
       <div className="form-row">
         <Labels text={totalExperienceLabel} />
         <input
+        type="number"
           name="TotalExperience"
           value={formData.TotalExperience}
           onChange={handleChange}
+        
         />
       </div>
 
@@ -95,6 +133,7 @@ function AddInterview() {
           name="SkillSet"
           value={formData.SkillSet}
           onChange={handleChange}
+          
         />
       </div>
 
@@ -104,6 +143,7 @@ function AddInterview() {
           name="CurrentOrganization"
           value={formData.CurrentOrganization}
           onChange={handleChange}
+          
         />
       </div>
 
@@ -113,15 +153,20 @@ function AddInterview() {
           name="NoticePeriod"
           value={formData.NoticePeriod}
           onChange={handleChange}
+          
         >
-          <option value="">Select</option>
+          <option value="" disabled>Select</option>
           <option value="Immediate">Immediate</option>
           <option value="15 Days">15 Days</option>
           <option value="30 Days">30 Days</option>
           <option value="60 Days">60 Days</option>
           <option value="90 Days">90 Days</option>
+          
         </select>
+        
       </div>
+
+  
 
       <div className="btn-box">
         <button type="submit">Save</button>
@@ -130,6 +175,8 @@ function AddInterview() {
         </button>
       </div>
     </form>
+    <ToastContainer position="top-center" autoClose={3000}/>
+    </>
   );
 }
 
