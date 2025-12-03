@@ -1,0 +1,178 @@
+/* Footer.css — tuned to match requested layout
+   Left: icon
+   Center: evenly-spaced nav links (wide gaps)
+   Right: circular social icons
+*/
+
+/* variables */
+:root {
+  --footer-bg: #000000;
+  --accent-purple: #9b00ff;
+  --muted: #cfcfcf;
+  --max-width: 1200px;
+}
+
+/* MAIN FOOTER */
+.site-footer {
+  background: var(--footer-bg);
+}
+
+/* TOP ROW: three columns: left (icon), center (nav area), right (socials) */
+.footer-top {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 28px 20px 12px;
+  display: grid;
+  /* left narrow, center large, right narrow */
+  grid-template-columns: 120px 1fr 220px;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* LEFT: icon container (snug at left) */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 6px;
+}
+
+/* icon sizing */
+.accenture-icon {
+  width: 72px; /* size that matches screenshot */
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* CENTER: nav area — we'll center the nav block and space links across its width */
+.footer-nav {
+  /* center the nav block within the large middle column */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* create a nav-inner that actually spreads the links across a wide area */
+.footer-nav .nav-inner {
+  width: 100%;
+  max-width: 640px; /* controls how wide the gaps get — tweak if you want wider/narrower */
+  display: flex;
+  justify-content: space-between; /* key: distributes links with wide gaps */
+  align-items: center;
+}
+
+/* link styles */
+.footer-link {
+  color: #d0d0d0;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.06);
+  text-underline-offset: 3px;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  padding: 6px 0;
+}
+.footer-link:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* RIGHT: socials */
+.footer-social {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* social circle styling */
+.social-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #ddd;
+  border: 2px solid rgba(255,255,255,0.08);
+  transition: background 150ms ease, color 150ms ease, transform 120ms ease;
+}
+.social-btn svg { display: block; }
+.social-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* divider */
+.footer-divider {
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin: 18px auto 14px;
+  width: 100%;
+  max-width: var(--max-width);
+  box-sizing: border-box;
+}
+
+/* bottom row */
+.footer-bottom {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+  box-sizing: border-box;
+}
+.legal-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.legal-links a {
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  text-decoration: none; /* remove underline */
+}
+
+.legal-links a:hover {
+  color: #fff;
+  text-decoration: none; /* keep no underline even on hover */
+}
+
+
+/* responsive: stack and reduce spacing */
+@media (max-width: 960px) {
+  .footer-top { grid-template-columns: 100px 1fr 160px; padding: 22px 18px 12px; }
+  .accenture-icon { width: 62px; }
+  .footer-nav .nav-inner { max-width: 520px; gap: 10px; }
+}
+
+@media (max-width: 680px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+    padding: 18px 16px 12px;
+  }
+  .footer-logo { justify-content: center; }
+  .footer-nav { order: 2; width: 100%; }
+  .footer-nav .nav-inner { max-width: 100%; justify-content: space-around; padding: 6px 0; }
+  .footer-social { order: 3; justify-content: center; gap: 12px; }
+  .footer-bottom { flex-direction: column; align-items: center; gap: 12px; text-align: center; padding-bottom: 18px; }
+  .legal-links { gap: 14px; }
+  .accenture-icon { width: 72px; }
+}
+
+/* small mobile */
+@media (max-width: 420px) {
+  .accenture-icon { width: 60px; }
+  .footer-link { font-size: 14px; }
+  .legal-links { gap: 10px; }
+}
