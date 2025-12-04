@@ -1,8 +1,4 @@
-/* Footer.css — tuned to match requested layout
-   Left: icon
-   Center: evenly-spaced nav links (wide gaps)
-   Right: circular social icons
-*/
+/* Footer.css — full-bleed footer while keeping inner content centered */
 
 /* variables */
 :root {
@@ -12,85 +8,94 @@
   --max-width: 1200px;
 }
 
-/* breakout full-bleed footer while page remains centered */
+/* Make the footer full-bleed regardless of body padding */
 .site-footer {
-  /* ensure no max-width/padding are constraining it */
-  width: 100vw;                 /* full viewport width */
-  position: relative;           /* allow left offset */
-  left: 50%;                    /* push to center point */
+  /* full-bleed trick: shift to center of viewport and expand to viewport width */
+  position: relative;
+  left: 50%;
   right: 50%;
-  margin-left: -50vw;           /* pull it back to the left edge of viewport */
+  margin-left: -50vw;
   margin-right: -50vw;
+  margin-top: auto; /* Push footer to bottom */
+  margin-bottom: 0; /* Remove any bottom margin */
+  width: 100vw;
+
+  background-color: var(--footer-bg);
   box-sizing: border-box;
-  padding-left: 0;              /* ensure no extra side padding */
-  padding-right: 0;
-  background-color: #000000;
+  padding: 0; /* inner spacing handled by .footer-top */
+  z-index: 0;
 }
 
-/* TOP ROW — REMOVE MAX-WIDTH + PADDING SIDE */
+/* TOP ROW: Contains the logo and links (inner centered content) */
 .footer-top {
   width: 100%;
-  margin: 0;
-  padding: 28px 0 12px;   /* removed left/right padding */
+  max-width: var(--max-width);
+  margin: 0 auto; /* centers the inner grid within the full-bleed footer */
+  padding: 28px 25px 12px; /* controls the inner spacing */
   display: grid;
-  grid-template-columns: 120px 1fr 220px;
+  grid-template-columns: 120px 1fr;
   align-items: center;
   gap: 12px;
   box-sizing: border-box;
 }
 
-/* divider — REMOVE MAX-WIDTH */
+/* optional thin wrapper for better contrast control on very small screens */
+.footer-inner {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* divider — stretches across inner max-width */
 .footer-divider {
   border: 0;
   border-top: 1px solid rgba(255,255,255,0.06);
-  margin: 18px 0 14px;  /* full width */
-  width: 100%;
+  margin: 18px 25px 14px;
+  width: auto;
+  box-sizing: border-box;
 }
 
-/* BOTTOM ROW — REMOVE MAX-WIDTH + PADDING SIDE */
+/* BOTTOM ROW — content within inner max-width */
 .footer-bottom {
   width: 100%;
-  margin: 0;
-  padding: 0;           /* removed left/right padding */
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 12px 25px 28px;
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
-  padding-bottom: 24px;
   box-sizing: border-box;
 }
 
-/* LEFT: icon container (snug at left) */
+/* LEFT: icon container */
 .footer-logo {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 25px;
 }
 
 /* icon sizing */
 .accenture-icon {
-  width: 72px; /* size that matches screenshot */
+  width: 72px;
   height: auto;
   display: block;
   margin: 0;
 }
 
-/* CENTER: nav area — we'll center the nav block and space links across its width */
+/* CENTER: nav area — center the nav block */
 .footer-nav {
-  /* center the nav block within the large middle column */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* create a nav-inner that actually spreads the links across a wide area */
+/* create a nav-inner that spreads the links */
 .footer-nav .nav-inner {
   width: 100%;
-  max-width: 640px; /* controls how wide the gaps get — tweak if you want wider/narrower */
+  max-width: 640px;
   display: flex;
-  justify-content: space-between; /* key: distributes links with wide gaps */
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -109,33 +114,6 @@
   transform: translateY(-1px);
 }
 
-/* RIGHT: socials */
-.footer-social {
-  display: flex;
-  gap: 14px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-/* social circle styling */
-.social-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  color: #ddd;
-  border: 2px solid rgba(255,255,255,0.08);
-  transition: background 150ms ease, color 150ms ease, transform 120ms ease;
-}
-.social-btn svg { display: block; }
-.social-btn:hover {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  transform: translateY(-3px);
-}
 
 .legal-links {
   display: flex;
@@ -146,20 +124,18 @@
 .legal-links a {
   color: rgba(255,255,255,0.7);
   font-size: 13px;
-  text-decoration: none; /* remove underline */
+  text-decoration: none;
 }
-
 .legal-links a:hover {
   color: #fff;
-  text-decoration: none; /* keep no underline even on hover */
 }
 
-
-/* responsive: stack and reduce spacing */
+/* responsive */
 @media (max-width: 960px) {
-  .footer-top { grid-template-columns: 100px 1fr 160px; padding: 22px 18px 12px; }
+  .footer-top { grid-template-columns: 100px 1fr; padding: 22px 18px 12px; }
   .accenture-icon { width: 62px; }
   .footer-nav .nav-inner { max-width: 520px; gap: 10px; }
+  .footer-bottom { padding-left: 18px; padding-right: 18px; }
 }
 
 @media (max-width: 680px) {
@@ -170,13 +146,11 @@
   .footer-logo { justify-content: center; }
   .footer-nav { order: 2; width: 100%; }
   .footer-nav .nav-inner { max-width: 100%; justify-content: space-around; padding: 6px 0; }
-  .footer-social { order: 3; justify-content: center; gap: 12px; }
   .footer-bottom { flex-direction: column; align-items: center; gap: 12px; text-align: center; padding-bottom: 18px; }
   .legal-links { gap: 14px; }
   .accenture-icon { width: 72px; }
 }
 
-/* small mobile */
 @media (max-width: 420px) {
   .accenture-icon { width: 60px; }
   .footer-link { font-size: 14px; }

@@ -16,30 +16,38 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
+// ... (imports)
+
 function App() {
   return (
     <Router>
-      <div className="App">
+      {/* This is the main wrapper. We will use CSS to make its child (the content)
+        grow to fill the space between the Header and the Footer.
+      */}
+      <div className="App-Layout"> 
         
-        {/* HEADER: Placed outside of Routes so it appears on all pages */}
         <Header />
         
-        <Routes>
-          {/* 1. Login route - always accessible */}
-          <Route path="/" element={<Login />} />
-          
-          {/* 2. Protected route - requires user to be logged in */}
-          <Route 
-            path="/add-interview" 
-            element={
-              <ProtectedRoute>
-                <AddInterview />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
+        {/* The main content area */}
+        <main className="App-Content"> 
+          <Routes>
+            {/* 1. Login route - always accessible */}
+            <Route path="/" element={<Login />} />
+            
+            {/* 2. Protected route - requires user to be logged in */}
+            <Route 
+              path="/add-interview" 
+              element={
+                <ProtectedRoute>
+                  <AddInterview />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </main>
+        
+        <Footer /> 
       </div>
-      <Footer /> 
     </Router>
   );
 }

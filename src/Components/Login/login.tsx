@@ -136,7 +136,7 @@ const Login = () => {
       <div className="content-wrapper">
         {/* HEADER */}
         <header className="hero">
-          <h1 className="hero-title page-column">Onboarding Dashboard</h1>
+          <h1 className="hero-title page-column">Interview Portal</h1>
 
           <p className="hero-sub page-column">
             Sign in with the personal email address you used during your
