@@ -12,7 +12,7 @@ import Labels, {
 import "./AddInterview.css";
 import {ToastContainer,toast} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -76,18 +76,18 @@ function AddInterview() {
 
 
       if(!formData.CandidateName.trim()){
-        newErrors.CandidateName="Required";
+        newErrors.CandidateName=" Please Enter Candidate Name";
         
       }
       if(!formData.TotalExperience.trim()){
-        newErrors.TotalExperience="Required"
+        newErrors.TotalExperience="Please Enter Total Experience"
       }
       if(!formData.SkillSet.trim()){
-        newErrors.SkillSet="Required"
+        newErrors.SkillSet=" Please Enter SkillSet "
        
       }
       if(!formData.CurrentOrganization.trim()){
-        newErrors.CurrentOrganization="Required"
+        newErrors.CurrentOrganization="Please Enter Current Organization"
        
       }
       
@@ -95,14 +95,14 @@ function AddInterview() {
       
       
       if(!formData.NoticePeriod.trim()){
-        newErrors.NoticePeriod="Required"
+        newErrors.NoticePeriod="Please Select Notice Period"
        
       }
       if(!formData.Feedback.trim()){
-        newErrors.Feedback="Required"
+        newErrors.Feedback="Please Select Feedback"
       }
       if(!formData.Remarks.trim()){
-        newErrors.Remarks="Required"
+        newErrors.Remarks="Please Enter Remarks"
 
       }
       
@@ -142,7 +142,7 @@ return; → stop here, do not call the API.*/
       console.error(err);
     }
   };
-  const navigate = useNavigate();
+  
 
 
   
@@ -296,7 +296,7 @@ return; → stop here, do not call the API.*/
 
       <div className="btn-box">
         <button type="submit">Save</button>
-        <button type="button" onClick={()=>navigate("/blank")}>
+        <button type="button">
           Cancel
         </button>
       </div>
