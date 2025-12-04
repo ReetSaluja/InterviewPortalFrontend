@@ -3,6 +3,7 @@ import Login from './Components/Login/login';
 import AddInterview from './Components/AddInterview'; 
 import { isLoggedIn } from './Components/Login/login'; 
 import type { JSX } from 'react';
+import Blankpage from './Components/blankpage';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   if (!isLoggedIn) {
@@ -28,6 +29,8 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
+          <Route path="/blank" element={<Blankpage />} />
         </Routes>
       </div>
     </Router>
