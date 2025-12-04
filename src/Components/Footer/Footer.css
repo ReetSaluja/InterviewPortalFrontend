@@ -12,22 +12,52 @@
   --max-width: 1200px;
 }
 
-/* MAIN FOOTER */
+/* breakout full-bleed footer while page remains centered */
 .site-footer {
-  background: var(--footer-bg);
+  /* ensure no max-width/padding are constraining it */
+  width: 100vw;                 /* full viewport width */
+  position: relative;           /* allow left offset */
+  left: 50%;                    /* push to center point */
+  right: 50%;
+  margin-left: -50vw;           /* pull it back to the left edge of viewport */
+  margin-right: -50vw;
+  box-sizing: border-box;
+  padding-left: 0;              /* ensure no extra side padding */
+  padding-right: 0;
+  background-color: #000000;
 }
 
-/* TOP ROW: three columns: left (icon), center (nav area), right (socials) */
+/* TOP ROW — REMOVE MAX-WIDTH + PADDING SIDE */
 .footer-top {
   width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 28px 20px 12px;
+  margin: 0;
+  padding: 28px 0 12px;   /* removed left/right padding */
   display: grid;
-  /* left narrow, center large, right narrow */
   grid-template-columns: 120px 1fr 220px;
   align-items: center;
   gap: 12px;
+  box-sizing: border-box;
+}
+
+/* divider — REMOVE MAX-WIDTH */
+.footer-divider {
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin: 18px 0 14px;  /* full width */
+  width: 100%;
+}
+
+/* BOTTOM ROW — REMOVE MAX-WIDTH + PADDING SIDE */
+.footer-bottom {
+  width: 100%;
+  margin: 0;
+  padding: 0;           /* removed left/right padding */
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
   box-sizing: border-box;
 }
 
@@ -36,7 +66,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 6px;
+  padding-left: 25px;
 }
 
 /* icon sizing */
@@ -107,30 +137,6 @@
   transform: translateY(-3px);
 }
 
-/* divider */
-.footer-divider {
-  border: 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  margin: 18px auto 14px;
-  width: 100%;
-  max-width: var(--max-width);
-  box-sizing: border-box;
-}
-
-/* bottom row */
-.footer-bottom {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  padding-bottom: 24px;
-  box-sizing: border-box;
-}
 .legal-links {
   display: flex;
   gap: 24px;
