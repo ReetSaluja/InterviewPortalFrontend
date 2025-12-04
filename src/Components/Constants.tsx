@@ -1,16 +1,25 @@
 import React from "react";
 
-type LabelProps={
-    text:string;
-}; /*Labels component expects one prop:*/
 export const candidateNameLabel = "Candidate Name";
 export const totalExperienceLabel = "Total Experience";
 export const skillSetLabel = "Skill Set";
 export const currentOrganizationLabel = "Current Organization";
 export const noticePeriodLabel = "Notice Period";
+export const FeedbackLabel="Feedback"
+export const RemarksLable="Remarks"
 
-function Labels({text}:LabelProps){
-return <label className="field-Lable">{text}</label>;
+type LabelProps={
+    text:string;
+    required:boolean;
+}
+
+function Labels({text,required}:LabelProps){
+return (
+<label className="field-Lable">
+    {text}
+    {required &&<span className="required-star">*</span>}
+    
+    </label>);
 }
 export default Labels;
 

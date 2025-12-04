@@ -3,9 +3,7 @@ import Login from './Components/Login/login';
 import AddInterview from './Components/AddInterview'; 
 import { isLoggedIn } from './Components/Login/login'; 
 import type { JSX } from 'react';
-import Header from './Components/Header/Header';
-import Footer from "./Components/Footer/Footer";
-
+import Blankpage from './Components/blankpage';
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   // NOTE: isLoggedIn should ideally be managed via React State/Context
@@ -37,6 +35,8 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
+          <Route path="/blank" element={<Blankpage />} />
         </Routes>
       </div>
       <Footer /> 
