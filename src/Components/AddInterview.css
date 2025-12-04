@@ -1,65 +1,83 @@
 
-*{
-  box-sizing: border-box; /*Content + padding + border */
+* {
+  box-sizing: border-box;
   font-family: system-ui, sans-serif;
 }
 
 body {
-  margin: 0; /* removes default spacing around page */
-  padding: 24px; /*space around content*/
+  margin: 0;
+  padding: 24px;
   background: #f3f4f6;
 }
 
-/*  form container  */
+
 .form-box {
-  width: 100%; /*container take whole horixontal space*/
-  max-width: 700px;    /* how wide the form can grow on big screens */
-  margin-left: 40px;   /* pushes form a bit from the very edge */
+  width: 100%;
+  max-width: 700px;
+  margin-left: 40px;
 }
 
-/* one row: label + input */
+/* Row: Label + Input */
 .form-row {
-  display: flex; /*creates the side-by-side layout*/
-  align-items: center; /*This aligns items vertically in the center of the row.*/
+  display: flex;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 18px; /*space below each row*/
+  margin-bottom: 18px;
 }
 
-/*  <Labels /> component */
-.form-row > :first-child { /*first element inside each .form-row*/
+/* Label */
+.form-row > :first-child {
   min-width: 200px;
   font-size: 16px;
-  font-weight: 600; /*bolder*/
+  font-weight: 600;
   color: #111827;
 }
 
-/* inputs and select */
+
 .form-row input,
-.form-row select {
-  flex: 1; /*stretch to take up remaining space in the flex row.*/
+.form-row select,
+.form-row textarea {
+  flex: 1;
   padding: 10px 12px;
-  border-radius: 8px; /*Adds rounded corners (curved edges).*/
+  border-radius: 8px;
   border: 1px solid #d1d5db;
-  background: #ffffff;
+  background-color: #ffffff;  /* always white */
   font-size: 15px;
 }
 
-.form-row input:focus, /*user clicks*/
-.form-row select:focus {
+/* Blue border on focus */
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
   outline: none;
-  border-color: #2563eb; /*focused, the border becomes blue*/
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); /* optional glow */
 }
 
-/* ===== buttons row ===== */
+
+.required-star {
+  color: red;
+  margin-left: 4px;
+}
+
+.error-input {
+  border-color: red !important;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-top: -10px;
+  margin-left: 216px;
+}
+
 .btn-box {
-  margin-top: 12px;
-  margin-left: 245px;  /* line up with inputs on desktop */
+  margin-top: 55px;
+  margin-left: 245px;
   display: flex;
-  gap: 12px; 
-  margin-top: 55px;          /* space between Save and Cancel */
+  gap: 12px;
 }
 
-/* styles to all <button> elements that are inside the .btn-box*/
 .btn-box button {
   padding: 8px 24px;
   border-radius: 6px;
@@ -67,7 +85,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  width:110px;
+  width: 110px;
 }
 
 /* Save */
@@ -82,18 +100,19 @@ body {
   color: white;
 }
 
-/*responsive*/
-@media (max-width: 640px) {/*only when the screen size is 640px wide or smaller.*/ 
-   body {
+/* 
+   MOBILE RESPONSIVE
+*/
+@media (max-width: 640px) {
+  body {
     padding: 16px;
   }
 
   .form-box {
-    margin-left: 5;           /* no big left margin on small screens */
+    margin-left: 5px;
     max-width: 100%;
   }
 
-  /* stack label above input */
   .form-row {
     flex-direction: column;
     align-items: flex-start;
@@ -104,18 +123,33 @@ body {
   }
 
   .form-row input,
-  .form-row select {
+  .form-row select,
+  .form-row textarea {
     width: 100%;
   }
 
-  /* buttons stay side-by-side, aligned with inputs */
   .btn-box {
     margin-left: 0;
-    justify-content: flex-start; /*align items to the left*/
-    flex-wrap: nowrap; /*keep in one row*/
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 
   .btn-box button {
     width: auto;
   }
+}
+/*  OVERRIDE CHROME AUTOFILL BLUE */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #000000;
 }
