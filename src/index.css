@@ -16,20 +16,52 @@
 }
 
 /* Force the whole viewport to be white and remove default margins */
-html, body, #root {
+html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
   background: var(--page-bg) !important;
   box-sizing: border-box;
 }
 
+/* Add this to a global stylesheet like index.css or App.css */
+
+/* Make the root container fill the entire viewport */
+#root {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column; /* Ensure children stack vertically */
+  margin: 0;
+  padding: 0;
+}
+
+/* New class for the top-level app layout (where Header, Content, Footer reside) */
+.App-Layout {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+/* Force the main content area to grow and push the footer down */
+/* Push page content down so it's not hidden behind fixed header */
+.App-Content {
+  flex-grow: 1;
+  padding: 60px 0 0;   /* Reduced top padding to move content up */
+  display: flex;
+  flex-direction: column;
+}
+
 /* Keep app centered horizontally, but start from top (no vertical centering) */
 body {
-  display: flex;
-  justify-content: center;   /* center horizontally */
-  align-items: flex-start;   /* align to top, not vertically centered */
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden; /* Prevent horizontal scroll */
   min-width: 320px;
   min-height: 100vh;
   background: var(--page-bg) !important;

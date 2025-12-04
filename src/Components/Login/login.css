@@ -16,12 +16,12 @@
 /* ------------------------------------------ */
 .login-page {
   width: 100%;
-  min-height: 100vh;
+  min-height: fit-content;
   background: #ffffff;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 140px;
+  padding-top: 0;
+  padding-bottom: 40px; /* Add some space before footer */
   box-sizing: border-box;
 }
 
@@ -40,8 +40,9 @@
 /* ------------------------------------------ */
 .hero {
   width: 100%;
-  padding: 6px 4px;
+  padding: 0 4px;
   box-sizing: border-box;
+  margin-top: 0;
 }
 
 .hero-title {
