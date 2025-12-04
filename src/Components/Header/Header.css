@@ -1,0 +1,55 @@
+/* Base container: Ensures no external margins/padding push the nav down */
+.app-header {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Nav Element: The viewport anchor. */
+#header-topnav {
+    position: fixed; /* Keep it fixed at the top */
+    top: 0;          /* Anchored to the absolute top edge */
+    left: 0;         /* Anchored to the absolute left edge */
+    width: 100%;
+    z-index: 1030;
+    margin: 0;       /* Explicitly zero out any margin */
+    padding: 0;      /* Explicitly zero out any padding */
+}
+
+/* The White Visual Bar: Provides the background and height */
+.navbar-background {
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+    z-index: 1031; 
+    
+    /* FURTHER DECREASED: Reduced vertical padding to 5px on top/bottom */
+    padding: 5px 0; 
+    border-bottom: 1px solid #ddd; 
+}
+
+/* Primary Nav: Content container */
+.primary-nav {
+    display: flex; 
+    align-items: center;
+    
+    margin: 0; 
+    
+    /* Horizontal padding to create distance from the left edge */
+    padding: 0 20px 0 20px; 
+}
+
+/* Logo Styling */
+.acn-logo-icon {
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain; 
+    background-position: left center;
+    
+    /* Logo size is kept the same, but centered within the smaller bar */
+    width: 300px;  
+    height: 60px;  
+}
+
+.acn-logo {
+    text-decoration: none; 
+}
