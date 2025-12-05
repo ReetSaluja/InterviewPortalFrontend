@@ -11,11 +11,9 @@
  * - Error handling and display
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
-// NOTE: STATIC_USER_CREDENTIALS is kept for fallback/dev, but not used for API flow.
-import { STATIC_USER_CREDENTIALS } from "../data";
 
 // Global login state - tracks if user is authenticated across the app
 export let isLoggedIn: boolean = false;
@@ -39,6 +37,72 @@ const Login = () => {
   // UI state management
   const [showPassword, setShowPassword] = useState<boolean>(false); // Toggle password visibility
   const [loading, setLoading] = useState<boolean>(false);            // Loading state during API call
+  
+  // Email dropdown state management
+  const [emails, setEmails] = useState<string[]>([]);         // List of emails fetched from API
+  const [loadingEmails, setLoadingEmails] = useState<boolean>(false); // Loading state for fetching emails
+
+  /**
+   * Fetches emails from API based on selected role
+   * Called when role changes or component mounts
+   */
+  useEffect(() => {
+    const fetchEmails = async () => {
+      // Convert role to lowercase for API (admin/interviewer)
+      const roleParam = activeRole.toLowerCase();
+      setLoadingEmails(true);
+      setEmail(""); // Clear selected email when role changes
+      setError(null);
+
+      try {
+        const res = await fetch(
+          `http://localhost:8000/auth/users?role=${roleParam}`,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+            },
+          }
+        );
+
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => null);
+          const msg =
+            errBody?.detail ||
+            errBody?.message ||
+            errBody?.error ||
+            `Failed to fetch users (${res.status})`;
+          setError(msg);
+          setEmails([]);
+          setLoadingEmails(false);
+          return;
+        }
+
+        const data = await res.json().catch(() => null);
+        
+        // Handle different response formats - could be array of emails or array of user objects
+        if (Array.isArray(data)) {
+          // If array contains objects with email property, extract emails
+          const emailList = data.map((item) => 
+            typeof item === "string" ? item : item.email || item.Email || ""
+          ).filter((email) => email !== "");
+          setEmails(emailList);
+        } else if (data?.emails && Array.isArray(data.emails)) {
+          setEmails(data.emails);
+        } else {
+          setEmails([]);
+        }
+      } catch (err: any) {
+        console.error("Error fetching emails:", err);
+        setError(err?.message || "Network error while fetching emails.");
+        setEmails([]);
+      } finally {
+        setLoadingEmails(false);
+      }
+    };
+
+    fetchEmails();
+  }, [activeRole]);
 
   /**
    * Handles role tab selection
@@ -107,19 +171,8 @@ const Login = () => {
       // Parse successful response - server returns user object
       const user = await res.json().catch(() => null);
 
-      // Fallback for development: if backend not ready, allow static credentials
-      // TODO: Remove this fallback in production
+      // Validate that user object is present and has required fields
       if (!user || !user.email) {
-        if (
-          email === STATIC_USER_CREDENTIALS.email &&
-          password === STATIC_USER_CREDENTIALS.password
-        ) {
-          // Static fallback success (dev only)
-          setLoggedIn(true);
-          navigate("/add-interview");
-          return;
-        }
-
         setError("Unexpected server response. Please try again.");
         setLoading(false);
         return;
@@ -129,6 +182,8 @@ const Login = () => {
       // This allows other components to access user info
       try {
         sessionStorage.setItem("user", JSON.stringify(user));
+        // Dispatch custom event to notify Header component of login
+        window.dispatchEvent(new Event("userLoggedIn"));
       } catch {
         // Ignore storage errors (e.g., if storage is disabled)
       }
@@ -215,20 +270,28 @@ const Login = () => {
                 </div>
               )}
 
-              {/* EMAIL INPUT FIELD */}
+              {/* EMAIL DROPDOWN FIELD */}
               <label className="field-label" htmlFor="email">
                 Email Address
               </label>
               <div className="form-group">
-                <input
+                <select
                   id="email"
-                  type="email"
-                  placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                />
+                  disabled={loadingEmails}
+                >
+                  <option value="">
+                    {loadingEmails ? "Loading emails..." : "Email"}
+                  </option>
+                  {emails.map((emailOption) => (
+                    <option key={emailOption} value={emailOption}>
+                      {emailOption}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* PASSWORD INPUT FIELD - Type changes based on showPassword state */}
