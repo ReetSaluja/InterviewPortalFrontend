@@ -6,6 +6,7 @@ import type { JSX } from 'react';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
 import Blankpage from './Components/Blankpage';
+import Dashboard from './Components/Dashboard';
 
 
 
@@ -35,6 +36,15 @@ function App() {
           <Routes>
             {/* 1. Login route - always accessible */}
             <Route path="/" element={<Login />} />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute> 
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             
             {/* 2. Protected route - requires user to be logged in */}
             <Route 
