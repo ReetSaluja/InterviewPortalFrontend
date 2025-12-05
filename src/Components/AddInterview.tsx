@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from  "axios";
+import axios from "axios";
 import Labels, {
   candidateNameLabel,
   currentOrganizationLabel,
@@ -11,11 +11,8 @@ import Labels, {
   RemarksLable,
 } from "./Constants";
 import "./AddInterview.css";
-import {ToastContainer,toast} from "react-toastify"
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-
 
 interface InterviewFormData {
   CandidateName: string;
@@ -23,365 +20,314 @@ interface InterviewFormData {
   SkillSet: string;
   CurrentOrganization: string;
   NoticePeriod: string;
-  Interviewer:string;
-  Feedback:string;
-  Remarks:string;
+  Interviewer: string;
+  Feedback: string;
+  Remarks: string;
 }
 
-
-interface Interviewers{
-  id:number;
-  InterviewerName:string;
-  PrimarySkill:string;
-  Proficiency:string;
-
+interface Interviewers {
+  id: number;
+  InterviewerName: string;
+  PrimarySkill: string;
+  Proficiency: number;
 }
-/* type = Tell TypeScript what shape the data should have.Partial<T> makes all fields optional.It extracts the keys of that interface as strings: */
-type InterviewFormErrors=Partial<Record<keyof InterviewFormData,string>>;
+ /*Errors object can contain some fields (not all)
 
+    Each field holds a string (the error message) */
+type InterviewFormErrors = Partial<Record<keyof InterviewFormData, string>>;
 
 function AddInterview() {
+  /*at the moment we declare the variable role
+TypeScript has NO IDEA yet:
+whether the user is logged in 
+So if we remove null, TypeScript will throw an erro*/
+  let role: "admin" | "interviewer" | null = null;
+  /*login api stores user info in sessionStorage*/
+  const storedUser = sessionStorage.getItem("user");
+  if (storedUser) {
+    try {
+      const user = JSON.parse(storedUser);
+      const serverRole = (user.role || "").toString().toLowerCase();
+      if (serverRole === "admin" || serverRole === "interviewer") {
+        role = serverRole;
+      }
+    } catch (error) {
+      console.error("Error parsing user from sessionStorage", error);
+    }
+  }
 
+  // ------------ interviewers list ------------
+  const [interviewers, setInterviewers] = useState<Interviewers[]>([]);
 
-
-
-  const [interviewers,setInterviewers]=useState<Interviewers[]>([]);
-  useEffect(()=>{
-    const LoadInterviewers=async()=>{
-      try{
-        const res=await axios.get("http://127.0.0.1:8000/interviewers/")
+  useEffect(() => {
+    const LoadInterviewers = async () => {
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/interviewers/");
         setInterviewers(res.data);
-      }catch(error){
-        console.error("Error loading Interviewers",error)
+      } catch (error) {
+        console.error("Error loading Interviewers", error);
       }
     };
     LoadInterviewers();
-  },[]);
+  }, []);
 
-
-
-
-  //  state for one form entry
+  // ------------ form data ------------
   const [formData, setFormData] = useState<InterviewFormData>({
     CandidateName: "",
     TotalExperience: "",
     SkillSet: "",
     CurrentOrganization: "",
     NoticePeriod: "",
-    Interviewer:"",
+    Interviewer: "",
     Feedback: "",
-    Remarks:"",
+    Remarks: "",
   });
 
-  
+  // ------------ errors ------------
+  const [errors, setErrors] = useState<InterviewFormErrors>({});
 
-
-/*errors – stores which fields are invalid and their messages*/
-  const[errors,setErrors]=useState<InterviewFormErrors>({});
-
-
-
-    const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = event.target;
 
-    setFormData((prev)=>({ /*setFormData updates the state.
-
-(prev) is the previous formData.
-
-...prev copies all existing fields.
-
-[name]: value updates only that one field.*/
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    setErrors((prev)=>({
+
+    setErrors((prev) => ({
       ...prev,
-      [name]:"",/* Copy all previous errors (...prev) Set [name] to an empty string  so that {errors[name]} becomes false and the red text disappears.*/
+      [name]: "",
     }));
   };
-  
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault();
-    const  newErrors:InterviewFormErrors={}/*Create an empty object to collect validation errors on this submit */
+    const newErrors: InterviewFormErrors = {};
 
+    if (!formData.CandidateName.trim()) {
+      newErrors.CandidateName = " Please Enter Candidate Name";
+    }
+    if (!formData.TotalExperience.trim()) {
+      newErrors.TotalExperience = "Please Enter Total Experience";
+    }
+    if (!formData.SkillSet.trim()) {
+      newErrors.SkillSet = " Please Enter SkillSet ";
+    }
+    if (!formData.CurrentOrganization.trim()) {
+      newErrors.CurrentOrganization = "Please Enter Current Organization";
+    }
+    if (!formData.NoticePeriod.trim()) {
+      newErrors.NoticePeriod = "Please Select Notice Period";
+    }
 
-
-      if(!formData.CandidateName.trim()){
-        newErrors.CandidateName=" Please Enter Candidate Name";
-        
+    // role-based validation
+    if (role === "admin") {
+      if (!formData.Interviewer.trim()) {
+        newErrors.Interviewer = "Please Select Interviewer";
       }
-      if(!formData.TotalExperience.trim()){
-        newErrors.TotalExperience="Please Enter Total Experience"
+    }
+
+    if (role === "interviewer") {
+      if (!formData.Feedback.trim()) {
+        newErrors.Feedback = "Please Select Feedback";
       }
-      if(!formData.SkillSet.trim()){
-        newErrors.SkillSet=" Please Enter SkillSet "
-       
+      if (!formData.Remarks.trim()) {
+        newErrors.Remarks = "Please Enter Remarks";
       }
-      if(!formData.CurrentOrganization.trim()){
-        newErrors.CurrentOrganization="Please Enter Current Organization"
-       
-      }
-      
-      
-      
-      
-      if(!formData.NoticePeriod.trim()){
-        newErrors.NoticePeriod="Please Select Notice Period"
-       
-      }
+    }
 
-      if(!formData.Interviewer.trim()){
-        newErrors.Interviewer="Please Select Interviewer"
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
-      }
-
-
-      if(!formData.Feedback.trim()){
-        newErrors.Feedback="Please Select Feedback"
-      }
-      if(!formData.Remarks.trim()){
-        newErrors.Remarks="Please Enter Remarks"
-
-      }
-
-
-      if(Object.keys(newErrors).length>0){
-        setErrors(newErrors);
-        return;
-      }/*Object.keys(newErrors) gives an array of fields that have errors.
-
-If there is at least one (length > 0):
-
-setErrors(newErrors) → show errors on screen.
-
-return; → stop here, do not call the API.*/
-       
-
-       try {
-        // remove Interviewer from the object before sending
+    try {
       const { Interviewer, ...payload } = formData;
-      const response = await axios.post("http://127.0.0.1:8000/candidates/", payload);
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/candidates/",
+        payload
+      );
       console.log("Saved", response.data);
-       toast.success("Form Submitted");
+      toast.success("Form Submitted");
 
-      
-
-      
       setFormData({
         CandidateName: "",
         TotalExperience: "",
         SkillSet: "",
         CurrentOrganization: "",
         NoticePeriod: "",
-        Interviewer:"",
-        Feedback:"",
-        Remarks:"",
+        Interviewer: "",
+        Feedback: "",
+        Remarks: "",
       });
-
-      
+      setErrors({});
     } catch (err) {
       toast.error("Error saving candidate");
       console.error(err);
     }
   };
 
-  
-  
-
-
-  
-
   return (
     <>
-     <form className="form-box" onSubmit={handleSave}>
-      <div className="form-row">
-        <Labels text={candidateNameLabel} required/>
-        <input
-          name="CandidateName" /*this MUST match your formData*/
-          value={formData.CandidateName}
-          onChange={handleChange}
-          className={errors.CandidateName ? "error-input":""} /*If errors.CandidateName has something (like "Required"), class is "error-input" (red border). Else, class is empty string.*/
-          
-        />
-      </div>
-      {errors.CandidateName &&(
-        <p className="error-text">{errors.CandidateName}</p>
-      )} 
-
-
-
-
-
-      <div className="form-row">
-        <Labels text={totalExperienceLabel} required />
-        <input
-        type="number"
-          name="TotalExperience"
-          value={formData.TotalExperience}
-          onChange={handleChange}
-          className={errors.TotalExperience ? "error-input" : ""}
+      <form className="form-box" onSubmit={handleSave}>
         
-        />
-      </div>
-      {errors.TotalExperience &&(
-        <p className="error-text">{errors.TotalExperience}</p>
-      )}
+        {/* Candidate Name */}
+        <div className="form-row">
+          <Labels text={candidateNameLabel} required />
+          <input
+            name="CandidateName"
+            value={formData.CandidateName}
+            onChange={handleChange}
+            className={errors.CandidateName ? "error-input" : ""}
+          />
+        </div>
+        {errors.CandidateName && (
+          <p className="error-text">{errors.CandidateName}</p>
+        )}
 
+        {/* Total Experience */}
+        <div className="form-row">
+          <Labels text={totalExperienceLabel} required />
+          <input
+            type="number"
+            name="TotalExperience"
+            value={formData.TotalExperience}
+            onChange={handleChange}
+            className={errors.TotalExperience ? "error-input" : ""}
+          />
+        </div>
+        {errors.TotalExperience && (
+          <p className="error-text">{errors.TotalExperience}</p>
+        )}
 
+        {/* Skill Set */}
+        <div className="form-row">
+          <Labels text={skillSetLabel} required />
+          <input
+            name="SkillSet"
+            value={formData.SkillSet}
+            onChange={handleChange}
+            className={errors.SkillSet ? "error-input" : ""}
+          />
+        </div>
+        {errors.SkillSet && <p className="error-text">{errors.SkillSet}</p>}
 
+        {/* Current Org */}
+        <div className="form-row">
+          <Labels text={currentOrganizationLabel} required />
+          <input
+            name="CurrentOrganization"
+            value={formData.CurrentOrganization}
+            onChange={handleChange}
+            className={errors.CurrentOrganization ? "error-input" : ""}
+          />
+        </div>
+        {errors.CurrentOrganization && (
+          <p className="error-text">{errors.CurrentOrganization}</p>
+        )}
 
-
-      <div className="form-row">
-        <Labels text={skillSetLabel} required/>
-        <input
-          name="SkillSet"
-          value={formData.SkillSet}
-          onChange={handleChange}
-          className={errors.SkillSet ? "error-input":""}
-          
-        />
-      </div>
-      {errors.SkillSet &&(
-        <p className="error-text">{errors.SkillSet}</p>
-      )}
-
-
-
-
-
-
-      <div className="form-row">
-        <Labels text={currentOrganizationLabel} required />
-        <input
-          name="CurrentOrganization"
-          value={formData.CurrentOrganization}
-          onChange={handleChange}
-          className={errors.CurrentOrganization ? "error-input" :""}
-          
-        />
-      </div>
-      {errors.CurrentOrganization&&(
-        <p className="error-text">{errors.CurrentOrganization}</p>
-      )}
-
-
-
-
-      <div className="form-row">
-        <Labels text={noticePeriodLabel} required />
-        <select
-          name="NoticePeriod"
-          value={formData.NoticePeriod}
-          onChange={handleChange}
-          className={errors.NoticePeriod ? "error-input" :""}
-          
-        >
-          <option value="" disabled>Select</option>
-          <option value="Immediate">Immediate</option>
-          <option value="15 Days">15 Days</option>
-          <option value="30 Days">30 Days</option>
-          <option value="60 Days">60 Days</option>
-          <option value="90 Days">90 Days</option>
-          
-        </select>
-        
-      </div>
-      {errors.NoticePeriod &&(
-        <p className="error-text">{errors.NoticePeriod}</p>
-      )}
-
-
-      <div className="form-row">
-        <Labels text={InterviewerLabel} required />
-        <select
-          name="Interviewer"
-          value={formData.Interviewer}
-          onChange={handleChange}
-          className={errors.Interviewer ? "error-input" :""}
+        {/* Notice Period */}
+        <div className="form-row">
+          <Labels text={noticePeriodLabel} required />
+          <select
+            name="NoticePeriod"
+            value={formData.NoticePeriod}
+            onChange={handleChange}
+            className={errors.NoticePeriod ? "error-input" : ""}
           >
-            <option value="" disabled>Select</option>
-
-            {interviewers.map((iv)=>(
-              // .map() loops through each interviewer and creates an <option> for it.
-            <option key={iv.id} value={iv.id.toString()}>
-              {iv.InterviewerName}
+            <option value="" disabled>
+              Select
             </option>
-          /*React requires a unique key for lists.
-          iv.id is the unique ID of each interviewer.
-          This is the dropdown value that gets stored in your form.*/
-          ))}
-            </select>
-           </div>
-          
-           {errors.Interviewer &&(
-            <p className="error-text">{errors.Interviewer}</p>
-          )}
-        
+            <option value="Immediate">Immediate</option>
+            <option value="15 Days">15 Days</option>
+            <option value="30 Days">30 Days</option>
+            <option value="60 Days">60 Days</option>
+            <option value="90 Days">90 Days</option>
+          </select>
+        </div>
+        {errors.NoticePeriod && (
+          <p className="error-text">{errors.NoticePeriod}</p>
+        )}
 
+        {/* Interviewer dropdown (ONLY admin) */}
+        {role === "admin" && (
+          <>
+            <div className="form-row">
+              <Labels text={InterviewerLabel} required />
+              <select
+                name="Interviewer"
+                value={formData.Interviewer}
+                onChange={handleChange}
+                className={errors.Interviewer ? "error-input" : ""}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                {interviewers.map((iv) => (
+                  <option key={iv.id} value={iv.id.toString()}>
+                    {iv.InterviewerName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {errors.Interviewer && (
+              <p className="error-text">{errors.Interviewer}</p>
+            )}
+          </>
+        )}
 
+        {/* Feedback + Remarks (ONLY interviewer) */}
+        {role === "interviewer" && (
+          <>
+            <div className="form-row">
+              <Labels text={FeedbackLabel} required />
+              <select
+                name="Feedback"
+                value={formData.Feedback}
+                onChange={handleChange}
+                className={errors.Feedback ? "error-input" : ""}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="Selected">Selected</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+            {errors.Feedback && (
+              <p className="error-text">{errors.Feedback}</p>
+            )}
 
+            <div className="form-row">
+              <Labels text={RemarksLable} required />
+              <textarea
+                name="Remarks"
+                value={formData.Remarks}
+                onChange={handleChange}
+                rows={4}
+                cols={80}
+                className={errors.Remarks ? "error-input" : ""}
+              />
+            </div>
+            {errors.Remarks && (
+              <p className="error-text">{errors.Remarks}</p>
+            )}
+          </>
+        )}
 
+        {/* BUTTONS */}
+        <div className="btn-box">
+          <button type="submit">Save</button>
+          <button type="button">Cancel</button>
+        </div>
+      </form>
 
-
-
-
-
-      <div className="form-row">
-        <Labels text={FeedbackLabel} required/>
-        <select
-        name="Feedback"
-        value={formData.Feedback}
-        onChange={handleChange}
-        className={errors.Feedback ? "error-input" :""}>
-          <option value="" disabled>Select</option>
-          <option value="Selected">Selected</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-
-      </div>
-      {errors.Feedback && (
-        <p className="error-text">{errors.Feedback}</p>
-      )}
-
-
-
-
-
-
-
-      <div className="form-row">
-        <Labels text={RemarksLable} required />
-        <textarea
-          name="Remarks"
-          value={formData.Remarks}
-          onChange={handleChange}
-          rows={4}
-          cols={80}
-          className={errors.Remarks ? "error-input" : ""}
-        />
-      </div>
-      {errors.Remarks &&(
-        <p className="error-text">{errors.Remarks}</p>
-      )}
-          
-
-  
-
-      <div className="btn-box">
-        <button type="submit">Save</button>
-        <button type="button">
-          Cancel
-        </button>
-      </div>
-      
-    </form>
-    <ToastContainer position="top-center" autoClose={2000} />
-
-    
-    
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 }
