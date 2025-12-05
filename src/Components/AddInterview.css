@@ -6,22 +6,21 @@
 }
 
 .form-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
+  display: flex;                       /* Place label + input on same row */
+  align-items: center;                 /* Vertically center items */
+  gap: 16px;                           /* Space between label and input */
+  margin-bottom: 18px;                 /* Space between each row */
 }
 
 .form-row > :first-child {
-   display: block;
-    font-weight: 600;
-    color: #4A4A4A;
-    font-family: "Graphik SemiBold", "Arial", Sans-Serif;
-    line-height: 1.000em;
-    margin-bottom: 0;
-    width: 75%;
+   display: block;                     /* Block element for consistent spacing */
+   font-weight: 600;                   /* Semi-bold text */
+   color: #4A4A4A;                     /* Label text color */
+   font-family: "Graphik SemiBold", "Arial", Sans-Serif; /* Label font */
+   line-height: 1.000em;               /* Compact line height */
+   margin-bottom: 0;                   /* Remove bottom margin */
+   width: 75%;                         /* Label width inside flex row */
 }
-
 
 .form-row input,
 .form-row select,
@@ -43,19 +42,20 @@
 }
 
 .required-star {
-  color: red;
-  margin-left: 4px;
+  color: red;                          /* Red star for required fields */
+  margin-left: 4px;                    /* Slight spacing from text */
 }
 
 .error-input {
-  border-color: red !important;
+  border-color: red !important;        /* For error highlighting */
 }
 
 .error-text {
-  color: red;
-  font-size: 13px;
-  margin-top: -10px;
-  margin-left: 320px;
+  color: red;                          /* Error message text color */
+  font-size: 13px;                     /* Smaller text */
+  margin-top: 4px;                   /* Pull text upward */
+  margin-left: 320px  ;                /* Align error text under inputs */
+  white-space: normal;               /* Allow wrapping */
 }
 
 .btn-box {
@@ -70,21 +70,21 @@
 }
 
 .btn-box button {
-  flex:1;
-  background-color: #000000;
-  border: none;
-  color: #FFFFFF;
-  font-family: "Graphik SemiBold", "Arial", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.143em;
-  padding: .938rem 0;
-  height: 3.125rem;
-  border-radius: 0;
-  width: auto;
-  margin: 0;      /* ← remove extra margins */
-  top: auto;      /* ← remove weird positioning */
-  position: static;
+  flex:1;                              /* Buttons grow evenly */
+  background-color: #000000;           /* Button background */
+  border: none;                        /* Remove border */
+  color: #FFFFFF;                      /* Text color white */
+  font-family: "Graphik SemiBold", "Arial", sans-serif; /* Button font */
+  font-size: 0.875rem;                 /* Slightly smaller text */
+  font-weight: 600;                    /* Bold */
+  line-height: 1.143em;                /* Line height */
+  padding: .938rem 0;                  /* Button padding */
+  height: 3.125rem;                    /* Button height */
+  border-radius: 0;                    /* Square edges */
+  width: auto;                         /* Natural width */
+  margin: 0;                           /* Remove extra margins */
+  top: auto;                           /* Remove weird top positioning */
+  position: static;                    /* Reset position */
 }
 
 .btn-box button:first-child {
@@ -105,18 +105,18 @@
   }
 
   .form-row {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column;            /* Stack label above input */
+    align-items: flex-start;           /* Align items left */
   }
 
   .form-row > :first-child {
-    min-width: 0;
+    min-width: 0;                      /* Prevent unwanted width on labels */
   }
 
   .form-row input,
   .form-row select,
   .form-row textarea {
-    width: 100%;
+    width: 100%;                       /* Inputs take full width */
   }
 
   .btn-box {
@@ -127,22 +127,24 @@
   }
 
   .btn-box button {
-    width: auto;
+    width: auto;                       /* Natural button width */
   }
-  .error-text{
-    margin-left: 0;
-    margin-top: 4px;
-    text-align: left;
+
+  .error-text {
+    margin-left: 0;                    /* Align error under input */
+    margin-top: 4px;                   /* Small top spacing */
+    text-align: left;                  /* Left-align */
   }
+
   .btn-box {
-    margin-left: 0;
-    width: 100%;
-    justify-content: center;   /* center the buttons */
-    gap: 12px;
+    margin-left: 0;                    /* Reset */
+    width: 100%;                       /* Full width */
+    justify-content: center;           /* Center buttons */
+    gap: 12px;                         /* Slightly smaller spacing */
   }
 
   .btn-box button {
-    width: auto;               /* keep natural size */
+    width: auto;                       /* Natural size */
   }
 }
 
@@ -155,8 +157,8 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-  box-shadow: 0 0 0px 1000px #ffffff inset !important;
-  background-color: #ffffff !important;
-  -webkit-text-fill-color: #000000;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important; /* Force white autofill background */
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;          /* Same for other browsers */
+  background-color: #ffffff !important;                        /* White background */
+  -webkit-text-fill-color: #000000;                            /* Black input text */
 }

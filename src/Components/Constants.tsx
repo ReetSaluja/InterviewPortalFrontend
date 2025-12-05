@@ -5,6 +5,7 @@ export const totalExperienceLabel = "Total Experience";
 export const skillSetLabel = "Skill Set";
 export const currentOrganizationLabel = "Current Organization";
 export const noticePeriodLabel = "Notice Period";
+export const InterviewerLabel="Interviewer"
 export const FeedbackLabel="Feedback"
 export const RemarksLable="Remarks"
 

@@ -8,6 +8,8 @@ import Footer from './Components/Footer/Footer';
 import Blankpage from './Components/Blankpage';
 
 
+
+
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   // NOTE: isLoggedIn should ideally be managed via React State/Context
   // to trigger re-renders, but keeping the original structure for now.
