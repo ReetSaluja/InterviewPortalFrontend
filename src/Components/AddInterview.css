@@ -1,28 +1,10 @@
-
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
-
-body {
-  margin: 0;
-  padding: 24px;
-  background: white;
-  color: #000000;
-  font-size: 1rem;
-  line-height: 1.6em;
-  font-family:"Graphic Regular","Aerila",sans-serif;
-  text-size-adjust: none;
-}
-
-
 .form-box {
   width: 100%;
   max-width: 700px;
-  margin-left: 40px auto 0 auto;
+  margin-left: 40px;
+  padding-top: 50px;
 }
 
-/* Row: Label + Input */
 .form-row {
   display: flex;
   align-items: center;
@@ -30,7 +12,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* Label */
 .form-row > :first-child {
    display: block;
     font-weight: 600;
@@ -45,36 +26,20 @@ body {
 .form-row input,
 .form-row select,
 .form-row textarea {
- display: inline-block;
-    box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075);
-    padding: .63rem 3.13rem .63rem .94rem;
-    width: calc(100% - 5.15em);
-    color: #000000;
-    vertical-align: middle;
-    background-color: #FFFFFF;
-    background-image: none;
-    border: 0.0625rem solid #4A4A4A;
-    border-radius: 0;
-    font-family: "Graphik Regular", "Arial", Sans-Serif;
-    font-size: 1rem;
-    line-height: 1.6em;
-    margin: 0.625em 0 0 0;
-}
-
-.form-row textarea {
-  height: auto;
-  min-height: 96px;
-  resize: vertical;
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-size: 15px;
 }
 
 .form-row input:focus,
 .form-row select:focus,
 .form-row textarea:focus {
   outline: none;
-  border: 1px solid #000000; /* or red if error */
-  
-  /* the blue halo glow */
-  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .required-star {
@@ -94,6 +59,9 @@ body {
 }
 
 .btn-box {
+  margin-top: 55px;
+  margin-bottom: 60px;
+  margin-left: 245px;
   display: flex;
   gap: 16px;              /* same as .form-row gap */
   margin-top: 18px;       /* same spacing as form rows */
@@ -119,19 +87,21 @@ body {
   position: static;
 }
 
+.btn-box button:first-child {
+  background: #2563eb;
+  color: white;
+}
 
+.btn-box button:last-child {
+  background: red;
+  color: white;
+}
 
-/* 
-   MOBILE RESPONSIVE
-*/
 @media (max-width: 640px) {
-  body {
-    padding: 16px;
-  }
-
   .form-box {
     margin-left: 5px;
     max-width: 100%;
+    padding-top: 90px;
   }
 
   .form-row {
@@ -151,6 +121,7 @@ body {
 
   .btn-box {
     margin-left: 0;
+    margin-bottom: 50px;
     justify-content: flex-start;
     flex-wrap: nowrap;
   }
@@ -174,7 +145,7 @@ body {
     width: auto;               /* keep natural size */
   }
 }
-/*  OVERRIDE CHROME AUTOFILL BLUE */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
