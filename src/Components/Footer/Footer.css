@@ -1,34 +1,46 @@
+/**
+ * FOOTER STYLES
+ * 
+ * Styles for the site footer component.
+ * Layout: Three-column grid (logo | nav links | social icons) on desktop
+ * Design: Black background with white text, responsive for mobile
+ */
+
+/* CSS CUSTOM PROPERTIES - Footer theme variables */
 :root {
-  --footer-bg: #000000;
-  --accent-purple: #9b00ff;
-  --muted: #cfcfcf;
-  --max-width: 1200px;
+  --footer-bg: #000000;        /* Black footer background */
+  --accent-purple: #9b00ff;    /* Purple accent color (for future use) */
+  --muted: #cfcfcf;            /* Muted gray text color */
+  --max-width: 1200px;         /* Maximum content width */
 }
 
+/* SITE FOOTER - Full-width footer container */
+/* Uses viewport width trick to break out of parent container constraints */
 .site-footer {
   position: relative;
   left: 50%;
   right: 50%;
-  margin-left: -50vw;
+  margin-left: -50vw;          /* Negative margin trick for full width */
   margin-right: -50vw;
-  margin-top: auto;
+  margin-top: auto;             /* Pushes footer to bottom */
   margin-bottom: 0;
-  width: 100vw;
+  width: 100vw;                 /* Full viewport width */
   background-color: var(--footer-bg);
   box-sizing: border-box;
   padding: 0;
   z-index: 0;
 }
 
+/* FOOTER TOP SECTION - Three-column grid layout */
 .footer-top {
   width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
+  max-width: var(--max-width);  /* Constrains width on large screens */
+  margin: 0 auto;                /* Centers content */
   padding: 28px 25px 12px;
   display: grid;
-  grid-template-columns: 120px 1fr;
-  align-items: center;
-  gap: 12px;
+  grid-template-columns: 120px 1fr auto;  /* Logo | Nav (flexible) | Social icons */
+  align-items: center;          /* Vertically centers all items */
+  gap: 12px;                     /* Space between columns */
   box-sizing: border-box;
 }
 
@@ -37,33 +49,38 @@
   box-sizing: border-box;
 }
 
+/* FOOTER DIVIDER - Horizontal line separating top and bottom sections */
 .footer-divider {
   border: 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  margin: 18px 25px 14px;
-  width: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);  /* Semi-transparent white line */
+  margin: 18px auto 14px;                          /* Centered with vertical margins */
+  width: calc(100% - 50px);                        /* Full width minus padding */
+  max-width: calc(var(--max-width) - 50px);         /* Respects max-width */
   box-sizing: border-box;
 }
 
+/* FOOTER BOTTOM SECTION - Legal links and copyright */
 .footer-bottom {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 12px 25px 28px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  /* Legal links left, copyright right */
   gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap;                 /* Wraps on small screens */
   box-sizing: border-box;
 }
 
+/* FOOTER LOGO CONTAINER - Left column for Accenture logo */
 .footer-logo {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start;      /* Aligns logo to left */
 }
 
+/* ACCENTURE ICON - Purple logo image */
 .accenture-icon {
   width: 72px;
   height: auto;
@@ -71,71 +88,169 @@
   margin: 0;
 }
 
+/* FOOTER NAVIGATION - Center column container */
 .footer-nav {
   display: flex;
-  justify-content: center;
+  justify-content: center;          /* Centers nav links */
   align-items: center;
 }
 
+/* NAV INNER - Flexbox container for navigation links */
 .footer-nav .nav-inner {
   width: 100%;
-  max-width: 640px;
+  max-width: 640px;                 /* Limits nav width */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;    /* Spaces links evenly */
   align-items: center;
 }
 
+/* FOOTER NAVIGATION LINKS - Styled links (About Us, Contact, etc.) */
 .footer-link {
-  color: #d0d0d0;
+  color: #d0d0d0;                   /* Light gray text */
   text-decoration: underline;
-  text-decoration-color: rgba(255,255,255,0.06);
-  text-underline-offset: 3px;
+  text-decoration-color: rgba(255,255,255,0.06);  /* Very subtle underline */
+  text-underline-offset: 3px;      /* Space between text and underline */
   font-size: 15px;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.6px;            /* Slightly spaced letters */
   padding: 6px 0;
 }
+
+/* FOOTER LINK HOVER - White text with slight lift on hover */
 .footer-link:hover {
   color: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-1px);      /* Subtle lift effect */
 }
 
-.legal-links {
+/* FOOTER SOCIAL ICONS - Right column container */
+.footer-social {
   display: flex;
-  gap: 24px;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: flex-end;        /* Aligns icons to right */
+  gap: 12px;                        /* Space between icons */
 }
-.legal-links a {
-  color: rgba(255,255,255,0.7);
-  font-size: 13px;
+
+/* SOCIAL ICON LINK - Circular icon container */
+.social-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);  /* Semi-transparent white border */
+  border-radius: 50%;               /* Perfect circle */
+  transition: all 0.2s ease;        /* Smooth hover transition */
   text-decoration: none;
 }
-.legal-links a:hover {
-  color: #fff;
+
+/* SOCIAL ICON HOVER - Solid border and lift effect */
+.social-icon-link:hover {
+  color: #ffffff;
+  border-color: #ffffff;            /* Solid white border on hover */
+  transform: translateY(-1px);      /* Slight lift */
 }
 
+/* SOCIAL ICON SVG - Icon sizing */
+.social-icon-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* LEGAL LINKS CONTAINER - Bottom left section */
+.legal-links {
+  display: flex;
+  gap: 24px;                        /* Space between legal links */
+  align-items: center;
+  flex-wrap: wrap;                  /* Wraps on small screens */
+}
+
+/* LEGAL LINK - Footer bottom policy links */
+.legal-link {
+  color: #ffffff;
+  font-size: 13px;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.3);  /* Visible underline */
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+/* LEGAL LINK HOVER - No color change, just underline */
+.legal-link:hover {
+  color: #ffffff;
+}
+
+/* FOOTER COPYRIGHT - Bottom right copyright text */
+.footer-copyright {
+  color: #ffffff;
+  font-size: 13px;
+  white-space: nowrap;               /* Prevents copyright from wrapping */
+}
+
+/* RESPONSIVE DESIGN - Tablet breakpoint (max-width: 960px) */
 @media (max-width: 960px) {
-  .footer-top { grid-template-columns: 100px 1fr; padding: 22px 18px 12px; }
-  .accenture-icon { width: 62px; }
-  .footer-nav .nav-inner { max-width: 520px; gap: 10px; }
+  .footer-top { 
+    grid-template-columns: 100px 1fr auto;  /* Smaller logo column */
+    padding: 22px 18px 12px; 
+  }
+  .accenture-icon { width: 62px; }            /* Smaller logo */
+  .footer-nav .nav-inner { 
+    max-width: 520px;                        /* Narrower nav */
+    gap: 10px; 
+  }
   .footer-bottom { padding-left: 18px; padding-right: 18px; }
+  .footer-social { gap: 10px; }              /* Tighter icon spacing */
+  .social-icon-link { width: 28px; height: 28px; }  /* Smaller icons */
+  .social-icon-link svg { width: 16px; height: 16px; }
+  .footer-divider { 
+    width: calc(100% - 36px); 
+    max-width: calc(var(--max-width) - 36px); 
+  }
 }
 
+/* RESPONSIVE DESIGN - Mobile breakpoint (max-width: 680px) */
+/* Stacks footer columns vertically */
 @media (max-width: 680px) {
   .footer-top {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr;             /* Single column layout */
     padding: 18px 16px 12px;
   }
-  .footer-logo { justify-content: center; }
-  .footer-nav { order: 2; width: 100%; }
-  .footer-nav .nav-inner { max-width: 100%; justify-content: space-around; padding: 6px 0; }
-  .footer-bottom { flex-direction: column; align-items: center; gap: 12px; text-align: center; padding-bottom: 18px; }
-  .legal-links { gap: 14px; }
+  .footer-logo { justify-content: center; } /* Center logo */
+  .footer-nav { 
+    order: 2;                                /* Nav appears second */
+    width: 100%; 
+  }
+  .footer-nav .nav-inner { 
+    max-width: 100%; 
+    justify-content: space-around;           /* Even spacing */
+    padding: 6px 0; 
+  }
+  .footer-social { 
+    order: 3;                                /* Social icons appear third */
+    justify-content: center; 
+    width: 100%; 
+    margin-top: 12px; 
+  }
+  .footer-bottom { 
+    flex-direction: column;                  /* Stack legal and copyright */
+    align-items: center; 
+    gap: 12px; 
+    text-align: center; 
+    padding-bottom: 18px; 
+  }
+  .legal-links { 
+    gap: 14px; 
+    justify-content: center;                 /* Center legal links */
+  }
   .accenture-icon { width: 72px; }
+  .footer-divider { 
+    width: calc(100% - 32px); 
+    max-width: calc(var(--max-width) - 32px); 
+  }
 }
 
+/* RESPONSIVE DESIGN - Small mobile breakpoint (max-width: 420px) */
 @media (max-width: 420px) {
-  .accenture-icon { width: 60px; }
-  .footer-link { font-size: 14px; }
-  .legal-links { gap: 10px; }
+  .accenture-icon { width: 60px; }          /* Even smaller logo */
+  .footer-link { font-size: 14px; }          /* Smaller nav text */
+  .legal-links { gap: 10px; }                /* Tighter legal link spacing */
 }

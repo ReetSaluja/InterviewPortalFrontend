@@ -1,34 +1,46 @@
+/**
+ * LOGIN PAGE STYLES
+ * 
+ * This stylesheet defines the visual design for the login page.
+ * Uses CSS custom properties (variables) for consistent theming.
+ * Layout: Centered form with hero title, responsive design for mobile devices.
+ */
+
+/* CSS CUSTOM PROPERTIES - Theme colors and sizing variables */
 :root {
-  --page-max-width: 1100px;
-  --accent-blue: #1a73e8;
-  --input-bg: #eaf2ff;
-  --input-border: #9bb0d3;
-  --text-black: #0b0b0b;
-  --muted-text: #444;
-  --error-red: #c0392b;
+  --page-max-width: 1100px;      /* Maximum width of page content */
+  --accent-blue: #1a73e8;        /* Primary blue color for links and focus states */
+  --input-bg: #eaf2ff;           /* Light blue background for input fields */
+  --input-border: #9bb0d3;       /* Border color for input fields */
+  --text-black: #0b0b0b;         /* Primary text color */
+  --muted-text: #444;             /* Secondary/muted text color */
+  --error-red: #c0392b;           /* Error message color */
 }
 
+/* MAIN PAGE CONTAINER - Centers content and sets white background */
 .login-page {
   width: 100%;
   min-height: fit-content;
   background: #ffffff;
   display: flex;
-  justify-content: center;
+  justify-content: center;  /* Centers content horizontally */
   padding-top: 50px;
   padding-bottom: 40px;
   box-sizing: border-box;
 }
 
+/* CONTENT WRAPPER - Constrains width and stacks hero/form vertically */
 .content-wrapper {
   width: 100%;
-  max-width: var(--page-max-width);
+  max-width: var(--page-max-width);  /* Limits width on large screens */
   margin: 0 auto;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: column;  /* Stacks hero and form vertically */
+  gap: 20px;                /* Space between hero and form */
 }
 
+/* HERO SECTION - Contains the page title */
 .hero {
   width: 100%;
   padding: 0 4px;
@@ -36,16 +48,17 @@
   margin-top: 0;
 }
 
+/* PAGE TITLE - Large, bold "Interview Portal" heading */
 .hero-title {
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
   font-size: 72px;
-  font-weight: 900;
+  font-weight: 700;        /* Bold but not ultra-bold */
   color: #000;
   padding-left: 50px;
-  letter-spacing: -4px;
-  transform: scaleX(1.12);
-  line-height: 0.9;
-  text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000;
+  letter-spacing: -4px;    /* Tighter letter spacing for modern look */
+  transform: scaleX(1.12); /* Slightly wider text */
+  line-height: 0.9;        /* Tighter line height */
+  text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000; /* Text outline effect */
   margin: 0 0 24px 0;
 }
 
@@ -58,45 +71,52 @@
   margin-bottom: 24px;
 }
 
+/* FORM AREA - Container for the login form card */
 .form-area {
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start;  /* Aligns form to the left */
 }
 
+/* LOGIN CARD - The white card containing the form */
 .login-card {
-  width: 720px;
+  width: 720px;              /* Fixed width for form */
   background: transparent;
 }
 
+/* ROLE TABS CONTAINER - Horizontal flexbox for Admin/Interviewer tabs */
 .role-tabs {
   display: flex;
-  gap: 12px;
+  gap: 12px;                 /* Space between tabs */
   margin-bottom: 20px;
 }
 
+/* INDIVIDUAL ROLE TAB - Pill-shaped button for role selection */
 .role-tab {
   padding: 8px 16px;
-  background: #f6f6f7;
-  border-radius: 24px;
+  background: #f6f6f7;       /* Light gray background */
+  border-radius: 24px;       /* Rounded pill shape */
   font-size: 14px;
   font-weight: 600;
   color: #333;
   border: 1px solid #e6e7e8;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s;          /* Smooth hover transition */
 }
 
+/* ROLE TAB HOVER STATE - Slightly darker on hover */
 .role-tab:hover {
   background: #ececec;
 }
 
+/* ACTIVE ROLE TAB - White background with blue border when selected */
 .role-tab.active {
   background: #ffffff;
-  border: 2px solid var(--accent-blue);
+  border: 2px solid var(--accent-blue);  /* Blue border for active state */
   color: #000;
 }
 
+/* FIELD LABEL - Bold label text above input fields */
 .field-label {
   font-weight: 700;
   margin: 10px 0 6px;
@@ -104,47 +124,54 @@
   color: #424242;
 }
 
+/* FORM GROUP - Container for input field and spacing */
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 16px;  /* Space between form fields */
 }
 
+/* INPUT FIELDS - Email and password inputs with light blue background */
 .form-group input {
   width: 100%;
   padding: 14px 12px;
   font-size: 16px;
   border-radius: 2px;
-  border: 2px solid var(--input-border);
-  background: var(--input-bg);
+  border: 2px solid var(--input-border);  /* Light blue border */
+  background: var(--input-bg);            /* Light blue background */
   outline: none;
-  transition: 0.2s;
+  transition: 0.2s;                        /* Smooth focus transition */
 }
 
+/* INPUT FOCUS STATE - Blue border and subtle shadow when focused */
 .form-group input:focus {
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.12);
+  border-color: var(--accent-blue);        /* Blue border on focus */
+  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.12); /* Blue glow effect */
 }
 
+/* FORM FOOTER ROW - Contains show password checkbox and forgot password link */
 .form-footer-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;  /* Aligns items to the left */
   align-items: center;
   margin-bottom: 20px;
 }
 
+/* LEFT LINKS CONTAINER - Groups show password and forgot password */
 .left-links {
   display: flex;
-  gap: 16px;
+  gap: 16px;                    /* Space between checkbox and link */
   align-items: center;
 }
 
+/* SHOW PASSWORD CHECKBOX LABEL - Flexbox for checkbox alignment */
 .show-password {
   font-size: 14px;
   color: #333;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 6px;                     /* Space between checkbox and text */
 }
 
+/* FORGOT PASSWORD LINK - Blue underlined link */
 .forgot-link {
   color: var(--accent-blue);
   text-decoration: underline;
@@ -152,11 +179,13 @@
   font-weight: 500;
 }
 
+/* REMEMBER ME (deprecated - kept for reference) */
 .remember {
   font-size: 14px;
   color: #333;
 }
 
+/* SIGN IN BUTTON - Black button with white text */
 .sign-in-button {
   background: #000;
   color: #fff;
@@ -169,6 +198,7 @@
   margin: 10px 0 22px;
 }
 
+/* BUTTON HOVER STATE - Slight opacity change on hover */
 .sign-in-button:hover {
   opacity: 0.9;
 }
@@ -180,8 +210,9 @@
   line-height: 1.6;
 }
 
+/* ERROR MESSAGE - Red background box for displaying validation/API errors */
 .error-message {
-  background: #fdecec;
+  background: #fdecec;                      /* Light red background */
   color: var(--error-red);
   padding: 10px;
   border-radius: 6px;
@@ -189,22 +220,25 @@
   margin-bottom: 20px;
 }
 
+/* RESPONSIVE DESIGN - Tablet breakpoint (max-width: 1100px) */
 @media (max-width: 1100px) {
-  .hero-title { font-size: 52px; }
-  .login-card { width: 650px; }
+  .hero-title { font-size: 52px; }         /* Smaller title */
+  .login-card { width: 650px; }             /* Narrower form */
   .login-page { padding-top: 90px; }
 }
 
+/* RESPONSIVE DESIGN - Small tablet breakpoint (max-width: 900px) */
 @media (max-width: 900px) {
-  .hero-title { font-size: 44px; }
-  .login-card { width: 100%; }
+  .hero-title { font-size: 44px; }         /* Even smaller title */
+  .login-card { width: 100%; }              /* Full width form */
   .login-page { padding-top: 85px; }
 }
 
+/* RESPONSIVE DESIGN - Mobile breakpoint (max-width: 520px) */
 @media (max-width: 520px) {
-  .hero-title { font-size: 34px; }
+  .hero-title { font-size: 34px; }         /* Mobile-sized title */
   .form-footer-row {
-    flex-direction: column;
+    flex-direction: column;                  /* Stack footer items vertically */
     align-items: flex-start;
     gap: 10px;
   }

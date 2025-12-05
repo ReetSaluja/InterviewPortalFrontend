@@ -1,42 +1,55 @@
+/**
+ * HEADER STYLES
+ * 
+ * Styles for the fixed top navigation bar.
+ * Layout: Fixed position header with white background and Accenture logo.
+ */
+
+/* APP HEADER - Root container, resets margins/padding */
 .app-header {
     margin: 0;
     padding: 0;
 }
 
+/* NAVIGATION BAR - Fixed position at top of viewport */
 #header-topnav {
-    position: fixed;
+    position: fixed;      /* Stays at top when scrolling */
     top: 0;
     left: 0;
-    width: 100%;
-    z-index: 1030;
+    width: 100%;         /* Full width */
+    z-index: 1030;       /* High z-index to stay above other content */
     margin: 0;
     padding: 0;
 }
 
+/* NAVBAR BACKGROUND - White bar with bottom border */
 .navbar-background {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);  /* White background */
     opacity: 1;
-    z-index: 1031;
-    padding: 5px 0;
-    border-bottom: 1px solid #ddd;
+    z-index: 1031;       /* Above the nav container */
+    padding: 5px 0;      /* Vertical padding */
+    border-bottom: 1px solid #ddd;  /* Subtle bottom border */
 }
 
+/* PRIMARY NAVIGATION - Flexbox container for logo alignment */
 .primary-nav {
     display: flex;
-    align-items: center;
+    align-items: center;  /* Vertically centers logo */
     margin: 0;
-    padding: 0 20px 0 20px;
+    padding: 0 20px 0 20px;  /* Horizontal padding */
 }
 
+/* ACCENTURE LOGO ICON - Logo displayed as background image */
 .acn-logo-icon {
     display: block;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: left center;
-    width: 300px;
-    height: 60px;
+    background-repeat: no-repeat;    /* Don't repeat logo */
+    background-size: contain;        /* Scale logo to fit */
+    background-position: left center; /* Position logo on left */
+    width: 300px;                    /* Logo width */
+    height: 60px;                    /* Logo height */
 }
 
+/* LOGO LINK - Removes default link styling */
 .acn-logo {
-    text-decoration: none;
+    text-decoration: none;  /* No underline on logo link */
 }
