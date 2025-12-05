@@ -24,3 +24,13 @@ return (
 }
 export default Labels;
 
+export const tableHeaders = {
+  sno: 'Sno',
+  candidateName: 'Candidate name',
+  experience: 'Experience',
+  technology: 'Technology',
+  noticePeriod: 'Notice period',
+  currentOrganization: 'Current organization',
+};
+
+

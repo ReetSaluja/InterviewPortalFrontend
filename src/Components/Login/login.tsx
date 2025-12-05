@@ -197,7 +197,7 @@ const Login = () => {
       // Mark user as logged in and navigate to dashboard
       setLoggedIn(true);
       setLoading(false);
-      navigate("/add-interview");
+      navigate("/dashboard");
     } catch (err: any) {
       // Handle network errors or unexpected exceptions
       console.error("Login error:", err);
