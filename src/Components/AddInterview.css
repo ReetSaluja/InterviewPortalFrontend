@@ -13,10 +13,13 @@
 }
 
 .form-row > :first-child {
-  min-width: 200px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #111827;
+   display: block;
+    font-weight: 600;
+    color: #4A4A4A;
+    font-family: "Graphik SemiBold", "Arial", Sans-Serif;
+    line-height: 1.000em;
+    margin-bottom: 0;
+    width: 75%;
 }
 
 
@@ -39,7 +42,6 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-
 .required-star {
   color: red;
   margin-left: 4px;
@@ -53,7 +55,7 @@
   color: red;
   font-size: 13px;
   margin-top: -10px;
-  margin-left: 216px;
+  margin-left: 320px;
 }
 
 .btn-box {
@@ -61,17 +63,28 @@
   margin-bottom: 60px;
   margin-left: 245px;
   display: flex;
-  gap: 12px;
+  gap: 16px;              /* same as .form-row gap */
+  margin-top: 18px;       /* same spacing as form rows */
+  width: 55.3%;
+  margin-left: 45%;
 }
 
 .btn-box button {
-  padding: 8px 24px;
-  border-radius: 6px;
+  flex:1;
+  background-color: #000000;
   border: none;
-  font-size: 15px;
+  color: #FFFFFF;
+  font-family: "Graphik SemiBold", "Arial", sans-serif;
+  font-size: 0.875rem;
   font-weight: 600;
-  cursor: pointer;
-  width: 110px;
+  line-height: 1.143em;
+  padding: .938rem 0;
+  height: 3.125rem;
+  border-radius: 0;
+  width: auto;
+  margin: 0;      /* ← remove extra margins */
+  top: auto;      /* ← remove weird positioning */
+  position: static;
 }
 
 .btn-box button:first-child {
@@ -115,6 +128,21 @@
 
   .btn-box button {
     width: auto;
+  }
+  .error-text{
+    margin-left: 0;
+    margin-top: 4px;
+    text-align: left;
+  }
+  .btn-box {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;   /* center the buttons */
+    gap: 12px;
+  }
+
+  .btn-box button {
+    width: auto;               /* keep natural size */
   }
 }
 
