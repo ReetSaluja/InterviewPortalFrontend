@@ -1,179 +1,177 @@
 
 * {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  box-sizing: border-box;              /* Include padding + border inside width/height */
+  font-family: system-ui, sans-serif;  /* Default font for all elements */
 }
 
 body {
-  margin: 0;
-  padding: 24px;
-  background: white;
-  color: #000000;
-  font-size: 1rem;
-  line-height: 1.6em;
-  font-family:"Graphic Regular","Aerila",sans-serif;
-  text-size-adjust: none;
+  margin: 0;                           /* Remove default browser margin */
+  padding: 24px;                       /* Add space around the page */
+  background: white;                   /* Background color */
+  color: #000000;                      /* Text color */
+  font-size: 1rem;                     /* Base font size */
+  line-height: 1.6em;                  /* Line spacing */
+  font-family:"Graphic Regular","Aerila",sans-serif; /* Body font family */
+  text-size-adjust: none;              /* Prevent mobile text-size auto adjustments */
 }
 
-
 .form-box {
-  width: 100%;
-  max-width: 700px;
-  margin-left: 40px auto 0 auto;
+  width: 100%;                         /* Full width container */
+  max-width: 700px;                    /* Max width limit */
+  margin-left: 40px auto 0 auto;       /* ❌ Invalid shorthand — likely intended margin: 40px auto 0 auto */
 }
 
 /* Row: Label + Input */
 .form-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
+  display: flex;                       /* Place label + input on same row */
+  align-items: center;                 /* Vertically center items */
+  gap: 16px;                           /* Space between label and input */
+  margin-bottom: 18px;                 /* Space between each row */
 }
 
 /* Label */
 .form-row > :first-child {
-   display: block;
-    font-weight: 600;
-    color: #4A4A4A;
-    font-family: "Graphik SemiBold", "Arial", Sans-Serif;
-    line-height: 1.000em;
-    margin-bottom: 0;
-    width: 75%;
+   display: block;                     /* Block element for consistent spacing */
+   font-weight: 600;                   /* Semi-bold text */
+   color: #4A4A4A;                     /* Label text color */
+   font-family: "Graphik SemiBold", "Arial", Sans-Serif; /* Label font */
+   line-height: 1.000em;               /* Compact line height */
+   margin-bottom: 0;                   /* Remove bottom margin */
+   width: 75%;                         /* Label width inside flex row */
 }
-
 
 .form-row input,
 .form-row select,
 .form-row textarea {
- display: inline-block;
-    box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075);
-    padding: .63rem 3.13rem .63rem .94rem;
-    width: calc(100% - 5.15em);
-    color: #000000;
-    vertical-align: middle;
-    background-color: #FFFFFF;
-    background-image: none;
-    border: 0.0625rem solid #4A4A4A;
-    border-radius: 0;
-    font-family: "Graphik Regular", "Arial", Sans-Serif;
-    font-size: 1rem;
-    line-height: 1.6em;
-    margin: 0.625em 0 0 0;
+  display: inline-block;               /* Allow width control */
+  box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075); /* Soft inner shadow */
+  padding: .63rem 3.13rem .63rem .94rem; /* Input padding */
+  width: calc(100% - 5.15em);          /* Width minus label width */
+  color: #000000;                      /* Text color */
+  vertical-align: middle;              /* Align with label */
+  background-color: #FFFFFF;           /* Input background */
+  background-image: none;              /* Remove unwanted browser styling */
+  border: 0.0625rem solid #4A4A4A;     /* Border style */
+  border-radius: 0;                    /* No rounded corners */
+  font-family: "Graphik Regular", "Arial", Sans-Serif; /* Input font */
+  font-size: 1rem;                     /* Font size */
+  line-height: 1.6em;                  /* Line height */
+  margin: 0.625em 0 0 0;               /* Top margin separating label and field */
 }
 
 .form-row textarea {
-  height: auto;
-  min-height: 96px;
-  resize: vertical;
+  height: auto;                        /* Allow natural height */
+  min-height: 96px;                    /* Minimum height */
+  resize: vertical;                    /* User can resize vertically only */
 }
 
 .form-row input:focus,
 .form-row select:focus,
 .form-row textarea:focus {
-  outline: none;
-  border: 1px solid #000000; /* or red if error */
-  
-  /* the blue halo glow */
-  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6);
+  outline: none;                       /* Remove browser default outline */
+  border: 1px solid #000000;           /* Black focus border */
+  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6);  /* Blue glow for focus */
 }
 
 .required-star {
-  color: red;
-  margin-left: 4px;
+  color: red;                          /* Red star for required fields */
+  margin-left: 4px;                    /* Slight spacing from text */
 }
 
 .error-input {
-  border-color: red !important;
+  border-color: red !important;        /* For error highlighting */
 }
 
 .error-text {
-  color: red;
-  font-size: 13px;
-  margin-top: -10px;
-  margin-left: 320px;
+  color: red;                          /* Error message text color */
+  font-size: 13px;                     /* Smaller text */
+  margin-top: 4px;                   /* Pull text upward */
+  margin-left: 320px  ;                /* Align error text under inputs */
+  white-space: normal;               /* Allow wrapping */
 }
 
 .btn-box {
-  display: flex;
-  gap: 16px;              /* same as .form-row gap */
-  margin-top: 18px;       /* same spacing as form rows */
-  width: 55.3%;
-  margin-left: 45%;
+  display: flex;                       /* Buttons side by side */
+  gap: 16px;                           /* Space between buttons */
+  margin-top: 18px;                    /* Space above button row */
+  width: 55.3%;                        /* Button container width */
+  margin-left: 45%;                    /* Shift container to the right */
 }
 
 .btn-box button {
-  flex:1;
-  background-color: #000000;
-  border: none;
-  color: #FFFFFF;
-  font-family: "Graphik SemiBold", "Arial", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.143em;
-  padding: .938rem 0;
-  height: 3.125rem;
-  border-radius: 0;
-  width: auto;
-  margin: 0;      /* ← remove extra margins */
-  top: auto;      /* ← remove weird positioning */
-  position: static;
+  flex:1;                              /* Buttons grow evenly */
+  background-color: #000000;           /* Button background */
+  border: none;                        /* Remove border */
+  color: #FFFFFF;                      /* Text color white */
+  font-family: "Graphik SemiBold", "Arial", sans-serif; /* Button font */
+  font-size: 0.875rem;                 /* Slightly smaller text */
+  font-weight: 600;                    /* Bold */
+  line-height: 1.143em;                /* Line height */
+  padding: .938rem 0;                  /* Button padding */
+  height: 3.125rem;                    /* Button height */
+  border-radius: 0;                    /* Square edges */
+  width: auto;                         /* Natural width */
+  margin: 0;                           /* Remove extra margins */
+  top: auto;                           /* Remove weird top positioning */
+  position: static;                    /* Reset position */
 }
-
-
 
 /* 
    MOBILE RESPONSIVE
 */
 @media (max-width: 640px) {
   body {
-    padding: 16px;
+    padding: 16px;                     /* Less padding on mobile */
   }
 
   .form-box {
-    margin-left: 5px;
-    max-width: 100%;
+    margin-left: 5px;                  /* Slight left padding */
+    max-width: 100%;                   /* Full width on small screens */
   }
 
   .form-row {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column;            /* Stack label above input */
+    align-items: flex-start;           /* Align items left */
   }
 
   .form-row > :first-child {
-    min-width: 0;
+    min-width: 0;                      /* Prevent unwanted width on labels */
   }
 
   .form-row input,
   .form-row select,
   .form-row textarea {
-    width: 100%;
+    width: 100%;                       /* Inputs take full width */
   }
 
   .btn-box {
-    margin-left: 0;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+    margin-left: 0;                    /* Reset alignment */
+    justify-content: flex-start;       /* Align left */
+    flex-wrap: nowrap;                 /* Keep buttons in one row */
   }
 
   .btn-box button {
-    width: auto;
+    width: auto;                       /* Natural button width */
   }
-  .error-text{
-    margin-left: 0;
-    margin-top: 4px;
-    text-align: left;
+
+  .error-text {
+    margin-left: 0;                    /* Align error under input */
+    margin-top: 4px;                   /* Small top spacing */
+    text-align: left;                  /* Left-align */
   }
+
   .btn-box {
-    margin-left: 0;
-    width: 100%;
-    justify-content: center;   /* center the buttons */
-    gap: 12px;
+    margin-left: 0;                    /* Reset */
+    width: 100%;                       /* Full width */
+    justify-content: center;           /* Center buttons */
+    gap: 12px;                         /* Slightly smaller spacing */
   }
 
   .btn-box button {
-    width: auto;               /* keep natural size */
+    width: auto;                       /* Natural size */
   }
 }
+
 /*  OVERRIDE CHROME AUTOFILL BLUE */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -184,8 +182,8 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-  box-shadow: 0 0 0px 1000px #ffffff inset !important;
-  background-color: #ffffff !important;
-  -webkit-text-fill-color: #000000;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important; /* Force white autofill background */
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;          /* Same for other browsers */
+  background-color: #ffffff !important;                        /* White background */
+  -webkit-text-fill-color: #000000;                            /* Black input text */
 }

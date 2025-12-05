@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from  "axios";
 import Labels, {
   candidateNameLabel,
@@ -6,6 +6,7 @@ import Labels, {
   skillSetLabel,
   totalExperienceLabel,
   noticePeriodLabel,
+  InterviewerLabel,
   FeedbackLabel,
   RemarksLable,
 } from "./Constants";
@@ -22,14 +23,44 @@ interface InterviewFormData {
   SkillSet: string;
   CurrentOrganization: string;
   NoticePeriod: string;
+  Interviewer:string;
   Feedback:string;
   Remarks:string;
+}
+
+
+interface Interviewers{
+  id:number;
+  InterviewerName:string;
+  PrimarySkill:string;
+  Proficiency:string;
+
 }
 /* type = Tell TypeScript what shape the data should have.Partial<T> makes all fields optional.It extracts the keys of that interface as strings: */
 type InterviewFormErrors=Partial<Record<keyof InterviewFormData,string>>;
 
 
 function AddInterview() {
+
+
+
+
+  const [interviewers,setInterviewers]=useState<Interviewers[]>([]);
+  useEffect(()=>{
+    const LoadInterviewers=async()=>{
+      try{
+        const res=await axios.get("http://127.0.0.1:8000/interviewers/")
+        setInterviewers(res.data);
+      }catch(error){
+        console.error("Error loading Interviewers",error)
+      }
+    };
+    LoadInterviewers();
+  },[]);
+
+
+
+
   //  state for one form entry
   const [formData, setFormData] = useState<InterviewFormData>({
     CandidateName: "",
@@ -37,9 +68,12 @@ function AddInterview() {
     SkillSet: "",
     CurrentOrganization: "",
     NoticePeriod: "",
+    Interviewer:"",
     Feedback: "",
     Remarks:"",
   });
+
+  
 
 
 /*errors – stores which fields are invalid and their messages*/
@@ -98,6 +132,13 @@ function AddInterview() {
         newErrors.NoticePeriod="Please Select Notice Period"
        
       }
+
+      if(!formData.Interviewer.trim()){
+        newErrors.Interviewer="Please Select Interviewer"
+
+      }
+
+
       if(!formData.Feedback.trim()){
         newErrors.Feedback="Please Select Feedback"
       }
@@ -105,7 +146,8 @@ function AddInterview() {
         newErrors.Remarks="Please Enter Remarks"
 
       }
-      
+
+
       if(Object.keys(newErrors).length>0){
         setErrors(newErrors);
         return;
@@ -116,10 +158,12 @@ If there is at least one (length > 0):
 setErrors(newErrors) → show errors on screen.
 
 return; → stop here, do not call the API.*/
-      
+       
 
        try {
-      const response = await axios.post("http://127.0.0.1:8000/candidates/", formData);
+        // remove Interviewer from the object before sending
+      const { Interviewer, ...payload } = formData;
+      const response = await axios.post("http://127.0.0.1:8000/candidates/", payload);
       console.log("Saved", response.data);
        toast.success("Form Submitted");
 
@@ -132,6 +176,7 @@ return; → stop here, do not call the API.*/
         SkillSet: "",
         CurrentOrganization: "",
         NoticePeriod: "",
+        Interviewer:"",
         Feedback:"",
         Remarks:"",
       });
@@ -142,6 +187,8 @@ return; → stop here, do not call the API.*/
       console.error(err);
     }
   };
+
+  
   
 
 
@@ -223,7 +270,6 @@ return; → stop here, do not call the API.*/
 
 
 
-
       <div className="form-row">
         <Labels text={noticePeriodLabel} required />
         <select
@@ -246,6 +292,36 @@ return; → stop here, do not call the API.*/
       {errors.NoticePeriod &&(
         <p className="error-text">{errors.NoticePeriod}</p>
       )}
+
+
+      <div className="form-row">
+        <Labels text={InterviewerLabel} required />
+        <select
+          name="Interviewer"
+          value={formData.Interviewer}
+          onChange={handleChange}
+          className={errors.Interviewer ? "error-input" :""}
+          >
+            <option value="" disabled>Select</option>
+
+            {interviewers.map((iv)=>(
+              // .map() loops through each interviewer and creates an <option> for it.
+            <option key={iv.id} value={iv.id.toString()}>
+              {iv.InterviewerName}
+            </option>
+          /*React requires a unique key for lists.
+          iv.id is the unique ID of each interviewer.
+          This is the dropdown value that gets stored in your form.*/
+          ))}
+            </select>
+           </div>
+          
+           {errors.Interviewer &&(
+            <p className="error-text">{errors.Interviewer}</p>
+          )}
+        
+
+
 
 
 
