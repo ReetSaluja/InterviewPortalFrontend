@@ -1,23 +1,10 @@
-
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
-
-body {
-  margin: 0;
-  padding: 24px;
-  background: #f3f4f6;
-}
-
-
 .form-box {
   width: 100%;
   max-width: 700px;
   margin-left: 40px;
+  padding-top: 50px;
 }
 
-/* Row: Label + Input */
 .form-row {
   display: flex;
   align-items: center;
@@ -25,7 +12,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* Label */
 .form-row > :first-child {
   min-width: 200px;
   font-size: 16px;
@@ -41,17 +27,16 @@ body {
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
-  background-color: #ffffff;  /* always white */
+  background-color: #ffffff;
   font-size: 15px;
 }
 
-/* Blue border on focus */
 .form-row input:focus,
 .form-row select:focus,
 .form-row textarea:focus {
   outline: none;
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); /* optional glow */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 
@@ -73,6 +58,7 @@ body {
 
 .btn-box {
   margin-top: 55px;
+  margin-bottom: 60px;
   margin-left: 245px;
   display: flex;
   gap: 12px;
@@ -88,29 +74,21 @@ body {
   width: 110px;
 }
 
-/* Save */
 .btn-box button:first-child {
   background: #2563eb;
   color: white;
 }
 
-/* Cancel */
 .btn-box button:last-child {
   background: red;
   color: white;
 }
 
-/* 
-   MOBILE RESPONSIVE
-*/
 @media (max-width: 640px) {
-  body {
-    padding: 16px;
-  }
-
   .form-box {
     margin-left: 5px;
     max-width: 100%;
+    padding-top: 90px;
   }
 
   .form-row {
@@ -130,6 +108,7 @@ body {
 
   .btn-box {
     margin-left: 0;
+    margin-bottom: 50px;
     justify-content: flex-start;
     flex-wrap: nowrap;
   }
@@ -138,7 +117,7 @@ body {
     width: auto;
   }
 }
-/*  OVERRIDE CHROME AUTOFILL BLUE */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

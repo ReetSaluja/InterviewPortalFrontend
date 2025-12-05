@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./login.css";
 // NOTE: STATIC_USER_CREDENTIALS is kept for fallback/dev, but not used for API flow.
 import { STATIC_USER_CREDENTIALS } from "../data";
 
