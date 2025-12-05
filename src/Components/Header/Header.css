@@ -1,0 +1,42 @@
+.app-header {
+    margin: 0;
+    padding: 0;
+}
+
+#header-topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-background {
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+    z-index: 1031;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.primary-nav {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 20px 0 20px;
+}
+
+.acn-logo-icon {
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left center;
+    width: 300px;
+    height: 60px;
+}
+
+.acn-logo {
+    text-decoration: none;
+}

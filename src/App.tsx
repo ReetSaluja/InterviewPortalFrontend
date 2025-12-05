@@ -3,6 +3,9 @@ import Login from './Components/Login/login';
 import AddInterview from './Components/AddInterview'; 
 import { isLoggedIn } from './Components/Login/login'; 
 import type { JSX } from 'react';
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
+import Blankpage from './Components/Blankpage';
 
 
 
@@ -26,24 +29,28 @@ function App() {
       */}
       <div className="App-Layout"> 
         
+        <Header />
         
-        
-        <Routes>
-          {/* 1. Login route - always accessible */}
-          <Route path="/" element={<Login />} />
-          
-          {/* 2. Protected route - requires user to be logged in */}
-          <Route 
-            path="/add-interview" 
-            element={
-              <ProtectedRoute>
-                <AddInterview />
-              </ProtectedRoute>
-            } 
-          />
+        <div className="App-Content">
+          <Routes>
+            {/* 1. Login route - always accessible */}
+            <Route path="/" element={<Login />} />
+            
+            {/* 2. Protected route - requires user to be logged in */}
+            <Route 
+              path="/add-interview" 
+              element={
+                <ProtectedRoute>
+                  <AddInterview />
+                </ProtectedRoute>
+              } 
+            />
 
+            <Route path="/blank" element={<Blankpage />} />
+          </Routes>
+        </div>
 
-        </Routes>
+        <Footer />
       </div>
     </Router>
   );

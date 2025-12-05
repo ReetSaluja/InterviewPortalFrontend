@@ -1,27 +1,10 @@
-
-* {
-  box-sizing: border-box;              /* Include padding + border inside width/height */
-  font-family: system-ui, sans-serif;  /* Default font for all elements */
-}
-
-body {
-  margin: 0;                           /* Remove default browser margin */
-  padding: 24px;                       /* Add space around the page */
-  background: white;                   /* Background color */
-  color: #000000;                      /* Text color */
-  font-size: 1rem;                     /* Base font size */
-  line-height: 1.6em;                  /* Line spacing */
-  font-family:"Graphic Regular","Aerila",sans-serif; /* Body font family */
-  text-size-adjust: none;              /* Prevent mobile text-size auto adjustments */
-}
-
 .form-box {
-  width: 100%;                         /* Full width container */
-  max-width: 700px;                    /* Max width limit */
-  margin-left: 40px auto 0 auto;       /* ❌ Invalid shorthand — likely intended margin: 40px auto 0 auto */
+  width: 100%;
+  max-width: 700px;
+  margin-left: 40px;
+  padding-top: 50px;
 }
 
-/* Row: Label + Input */
 .form-row {
   display: flex;                       /* Place label + input on same row */
   align-items: center;                 /* Vertically center items */
@@ -29,7 +12,6 @@ body {
   margin-bottom: 18px;                 /* Space between each row */
 }
 
-/* Label */
 .form-row > :first-child {
    display: block;                     /* Block element for consistent spacing */
    font-weight: 600;                   /* Semi-bold text */
@@ -43,34 +25,20 @@ body {
 .form-row input,
 .form-row select,
 .form-row textarea {
-  display: inline-block;               /* Allow width control */
-  box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075); /* Soft inner shadow */
-  padding: .63rem 3.13rem .63rem .94rem; /* Input padding */
-  width: calc(100% - 5.15em);          /* Width minus label width */
-  color: #000000;                      /* Text color */
-  vertical-align: middle;              /* Align with label */
-  background-color: #FFFFFF;           /* Input background */
-  background-image: none;              /* Remove unwanted browser styling */
-  border: 0.0625rem solid #4A4A4A;     /* Border style */
-  border-radius: 0;                    /* No rounded corners */
-  font-family: "Graphik Regular", "Arial", Sans-Serif; /* Input font */
-  font-size: 1rem;                     /* Font size */
-  line-height: 1.6em;                  /* Line height */
-  margin: 0.625em 0 0 0;               /* Top margin separating label and field */
-}
-
-.form-row textarea {
-  height: auto;                        /* Allow natural height */
-  min-height: 96px;                    /* Minimum height */
-  resize: vertical;                    /* User can resize vertically only */
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-size: 15px;
 }
 
 .form-row input:focus,
 .form-row select:focus,
 .form-row textarea:focus {
-  outline: none;                       /* Remove browser default outline */
-  border: 1px solid #000000;           /* Black focus border */
-  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6);  /* Blue glow for focus */
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .required-star {
@@ -91,11 +59,14 @@ body {
 }
 
 .btn-box {
-  display: flex;                       /* Buttons side by side */
-  gap: 16px;                           /* Space between buttons */
-  margin-top: 18px;                    /* Space above button row */
-  width: 55.3%;                        /* Button container width */
-  margin-left: 45%;                    /* Shift container to the right */
+  margin-top: 55px;
+  margin-bottom: 60px;
+  margin-left: 245px;
+  display: flex;
+  gap: 16px;              /* same as .form-row gap */
+  margin-top: 18px;       /* same spacing as form rows */
+  width: 55.3%;
+  margin-left: 45%;
 }
 
 .btn-box button {
@@ -116,17 +87,21 @@ body {
   position: static;                    /* Reset position */
 }
 
-/* 
-   MOBILE RESPONSIVE
-*/
-@media (max-width: 640px) {
-  body {
-    padding: 16px;                     /* Less padding on mobile */
-  }
+.btn-box button:first-child {
+  background: #2563eb;
+  color: white;
+}
 
+.btn-box button:last-child {
+  background: red;
+  color: white;
+}
+
+@media (max-width: 640px) {
   .form-box {
-    margin-left: 5px;                  /* Slight left padding */
-    max-width: 100%;                   /* Full width on small screens */
+    margin-left: 5px;
+    max-width: 100%;
+    padding-top: 90px;
   }
 
   .form-row {
@@ -145,9 +120,10 @@ body {
   }
 
   .btn-box {
-    margin-left: 0;                    /* Reset alignment */
-    justify-content: flex-start;       /* Align left */
-    flex-wrap: nowrap;                 /* Keep buttons in one row */
+    margin-left: 0;
+    margin-bottom: 50px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
 
   .btn-box button {
@@ -172,7 +148,6 @@ body {
   }
 }
 
-/*  OVERRIDE CHROME AUTOFILL BLUE */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
