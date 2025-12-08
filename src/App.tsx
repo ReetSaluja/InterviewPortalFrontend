@@ -5,7 +5,6 @@ import { isLoggedIn } from './Components/Login/login';
 import type { JSX } from 'react';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
-import Blankpage from './Components/Blankpage';
 import Dashboard from './Components/Dashboard';
 
 
@@ -56,7 +55,7 @@ function App() {
               } 
             />
 
-            <Route path="/blank" element={<Blankpage />} />
+           
           </Routes>
         </div>
 
