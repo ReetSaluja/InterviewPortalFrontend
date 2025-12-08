@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import Labels, {
   candidateNameLabel,
@@ -13,7 +13,7 @@ import Labels, {
 import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useNavigate } from "react-router-dom";
 interface InterviewFormData {
   CandidateName: string;
   TotalExperience: string;
@@ -41,13 +41,12 @@ function AddInterview() {
 TypeScript has NO IDEA yet:
 whether the user is logged in 
 So if we remove null, TypeScript will throw an erro*/
-  let role: "admin" | "interviewer" | null = null;
-  /*login api stores user info in sessionStorage*/
+  let role: "admin" | "interviewer" | null = null; 
   const storedUser = sessionStorage.getItem("user");
   if (storedUser) {
     try {
-      const user = JSON.parse(storedUser);
-      const serverRole = (user.role || "").toString().toLowerCase();
+      const user = JSON.parse(storedUser);/*storedUser is a JSON.This converts it into a JavaScript object.*/
+      const serverRole = (user.role || "").toString().toLowerCase();/*if role doesn't exist, use an empty string. converts to sting just in case*/   
       if (serverRole === "admin" || serverRole === "interviewer") {
         role = serverRole;
       }
@@ -56,11 +55,13 @@ So if we remove null, TypeScript will throw an erro*/
     }
   }
 
+  const navigate=useNavigate();
+
   // ------------ interviewers list ------------
-  const [interviewers, setInterviewers] = useState<Interviewers[]>([]);
+  const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/*initially an empty array*/
 
   useEffect(() => {
-    const LoadInterviewers = async () => {
+    const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
       try {
         const res = await axios.get("http://127.0.0.1:8000/interviewers/");
         setInterviewers(res.data);
@@ -69,7 +70,7 @@ So if we remove null, TypeScript will throw an erro*/
       }
     };
     LoadInterviewers();
-  }, []);
+  }, []);/*empty dependency array means this effect runs only once when the component loads*/
 
   // ------------ form data ------------
   const [formData, setFormData] = useState<InterviewFormData>({
@@ -174,6 +175,7 @@ So if we remove null, TypeScript will throw an erro*/
 
   return (
     <>
+      <h1 className="Page_Heading">Add Candidate</h1>
       <form className="form-box" onSubmit={handleSave}>
         
         {/* Candidate Name */}
@@ -323,7 +325,7 @@ So if we remove null, TypeScript will throw an erro*/
         {/* BUTTONS */}
         <div className="btn-box">
           <button type="submit">Save</button>
-          <button type="button">Cancel</button>
+          <button type="button" onClick={() => navigate("/dashboard")}>Cancel</button>
         </div>
       </form>
 
