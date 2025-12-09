@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Labels, {
   candidateNameLabel,
@@ -9,11 +9,16 @@ import Labels, {
   InterviewerLabel,
   FeedbackLabel,
   RemarksLable,
+  ClientManagerNameLabel,
+  ClientNameLabel,
 } from "./Constants";
 import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+
+
+
 interface InterviewFormData {
   CandidateName: string;
   TotalExperience: string;
@@ -23,7 +28,11 @@ interface InterviewFormData {
   Interviewer: string;
   Feedback: string;
   Remarks: string;
+  ClientName:string;
+  ClientManagerName:string;
 }
+
+
 
 interface Interviewers {
   id: number;
@@ -31,16 +40,14 @@ interface Interviewers {
   PrimarySkill: string;
   Proficiency: number;
 }
- /*Errors object can contain some fields (not all)
 
-    Each field holds a string (the error message) */
+
+ /*Errors object can contain some fields (not all).Each field holds a string (the error message) */
 type InterviewFormErrors = Partial<Record<keyof InterviewFormData, string>>;
 
-function AddInterview() {
-  /*at the moment we declare the variable role
-TypeScript has NO IDEA yet:
-whether the user is logged in 
-So if we remove null, TypeScript will throw an erro*/
+
+
+function AddInterview() { /*at the moment we declare the variable role TypeScript has NO IDEA yet:whether the user is logged in ,So if we remove null, TypeScript will throw an erro*/
   let role: "admin" | "interviewer" | null = null; 
   const storedUser = sessionStorage.getItem("user");
   if (storedUser) {
@@ -56,9 +63,7 @@ So if we remove null, TypeScript will throw an erro*/
   }
 
   const navigate=useNavigate();
-
-  // ------------ interviewers list ------------
-  const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/*initially an empty array*/
+  const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/* interviewers list -initially an empty array*/
 
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
@@ -82,31 +87,35 @@ So if we remove null, TypeScript will throw an erro*/
     Interviewer: "",
     Feedback: "",
     Remarks: "",
+    ClientName:"",
+    ClientManagerName:"",
+
+
   });
 
   // ------------ errors ------------
   const [errors, setErrors] = useState<InterviewFormErrors>({});
 
   const handleChange = (
-    event: React.ChangeEvent<
+    event: React.ChangeEvent< /*it handles changes from input, select, textarea*/
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target; /*extract name anf value from the event target*/
 
     setFormData((prev) => ({
-      ...prev,
+      ...prev, /*React keeps the old values using: ...prev*/
       [name]: value,
     }));
 
     setErrors((prev) => ({
       ...prev,
-      [name]: "",
+      [name]: "", /*clear the error message for this field*/
     }));
   };
 
   const handleSave = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault(); /*Stops the browser from doing its default form submission (page reload)*/
     const newErrors: InterviewFormErrors = {};
 
     if (!formData.CandidateName.trim()) {
@@ -131,6 +140,12 @@ So if we remove null, TypeScript will throw an erro*/
         newErrors.Interviewer = "Please Select Interviewer";
       }
     }
+    if(!formData.ClientName.trim()){
+      newErrors.ClientName="Please Select Client Name";
+    }
+    if(!formData.ClientManagerName.trim()){
+      newErrors.ClientManagerName="Please Enter Client Manager Name";
+    }
 
     if (role === "interviewer") {
       if (!formData.Feedback.trim()) {
@@ -147,13 +162,15 @@ So if we remove null, TypeScript will throw an erro*/
     }
 
     try {
-      const { Interviewer, ...payload } = formData;
+      const payload={
+        ...formData,
+        InterviewerId:formData.Interviewer ? Number(formData.Interviewer):null,
+      };
+      await axios.post("http://127.0.0.1:8000/candidates/", payload);
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/candidates/",
-        payload
-      );
-      console.log("Saved", response.data);
+      
+      
+      console.log("Saved", payload);
       toast.success("Form Submitted");
 
       setFormData({
@@ -165,6 +182,8 @@ So if we remove null, TypeScript will throw an erro*/
         Interviewer: "",
         Feedback: "",
         Remarks: "",
+        ClientName:"",
+        ClientManagerName:"",
       });
       setErrors({});
     } catch (err) {
@@ -185,6 +204,8 @@ So if we remove null, TypeScript will throw an erro*/
             name="CandidateName"
             value={formData.CandidateName}
             onChange={handleChange}
+            readOnly={role === "interviewer"}
+
             className={errors.CandidateName ? "error-input" : ""}
           />
         </div>
@@ -200,6 +221,7 @@ So if we remove null, TypeScript will throw an erro*/
             name="TotalExperience"
             value={formData.TotalExperience}
             onChange={handleChange}
+            readOnly={role === "interviewer"}
             className={errors.TotalExperience ? "error-input" : ""}
           />
         </div>
@@ -214,6 +236,7 @@ So if we remove null, TypeScript will throw an erro*/
             name="SkillSet"
             value={formData.SkillSet}
             onChange={handleChange}
+            readOnly={role === "interviewer"}
             className={errors.SkillSet ? "error-input" : ""}
           />
         </div>
@@ -226,6 +249,7 @@ So if we remove null, TypeScript will throw an erro*/
             name="CurrentOrganization"
             value={formData.CurrentOrganization}
             onChange={handleChange}
+            readOnly={role === "interviewer"}
             className={errors.CurrentOrganization ? "error-input" : ""}
           />
         </div>
@@ -240,6 +264,7 @@ So if we remove null, TypeScript will throw an erro*/
             name="NoticePeriod"
             value={formData.NoticePeriod}
             onChange={handleChange}
+            disabled={role === "interviewer"}
             className={errors.NoticePeriod ? "error-input" : ""}
           >
             <option value="" disabled>
@@ -282,6 +307,42 @@ So if we remove null, TypeScript will throw an erro*/
             )}
           </>
         )}
+
+
+
+        <div className="form-row">
+        <Labels text={ClientNameLabel} required />
+        <select
+        name="ClientName"
+        value={formData.ClientName}
+        onChange={handleChange}
+        className={errors.ClientName ? "error-input": ""}
+        >
+          <option value="" disabled>Select</option>
+          <option value="Fidelity">Fidelity</option>
+          <option value="Airbus">Airbus</option>
+          <option value="Google">Google</option>
+          <option value="Amazon">Amazon</option>  
+          <option value="Microsoft">Microsoft</option>
+        </select>
+        </div>
+        {errors.ClientName && (
+        <p className="error-text">{errors.ClientName}</p>)}
+
+        <div className="form-row">
+          <Labels text={ClientManagerNameLabel} required />
+          <input
+            name="ClientManagerName"
+            value={formData.ClientManagerName}
+            onChange={handleChange}
+            className={errors.ClientManagerName ? "error-input" : ""}
+          />
+        </div>
+        {errors.ClientManagerName && (
+          <p className="error-text">{errors.ClientManagerName}</p>
+        )}
+      
+
 
         {/* Feedback + Remarks (ONLY interviewer) */}
         {role === "interviewer" && (

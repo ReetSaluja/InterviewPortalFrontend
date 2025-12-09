@@ -17,6 +17,24 @@ interface Candidate {
 }
 
 function Dashboard() {
+
+  let role:"admin"|"interviewer"|null=null;
+  const storedUser=sessionStorage.getItem("user");
+if(storedUser){
+  try{
+    const user=JSON.parse(storedUser);
+    const serverRole=(user.role ||"").toString().toLowerCase();
+    if(serverRole==="admin" || serverRole==="interviewer"){
+      role=serverRole;
+    }
+  }catch(err){
+    console.error("Error parsing user from sessionStorage:",err);
+  }
+}
+
+
+
+
   const navigate = useNavigate();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,12 +105,19 @@ function Dashboard() {
     <div className="dashboard-container">
       <div className="dashboard-header">
         <h1>Dashboard</h1>
+        {role==="admin" &&(
+          <>
         <button 
           className="add-candidate-btn"
           onClick={() => navigate('/add-interview')}
         >
           + Add Candidate
         </button>
+        </>
+        )}
+        
+
+        
       </div>
       <div className="table-wrapper">
         <table className="dashboard-table">
