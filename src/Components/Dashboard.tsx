@@ -16,6 +16,24 @@ interface Candidate {
 }
 
 function Dashboard() {
+
+  let role:"admin"|"interviewer"|null=null;
+  const storedUser=sessionStorage.getItem("user");
+if(storedUser){
+  try{
+    const user=JSON.parse(storedUser);
+    const serverRole=(user.role ||"").toString().toLowerCase();
+    if(serverRole==="admin" || serverRole==="interviewer"){
+      role=serverRole;
+    }
+  }catch(err){
+    console.error("Error parsing user from sessionStorage:",err);
+  }
+}
+
+
+
+
   const navigate = useNavigate();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,25 +102,23 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-        {/* Dashboard Actions */}
-        <div className="dashboard-actions">
-          <button 
-            className="import-btn"
-            onClick={() => console.log('Import Data')}
-            type="button"
-          >
-            Import Data
-          </button>
-          <button 
-            className="add-candidate-btn"
-            onClick={() => navigate('/add-interview')}
-            type="button"
-          >
-            + Add Candidate
-          </button>
-        </div>
+      <div className="dashboard-header">
+        <h1>Dashboard</h1>
+        {role==="admin" &&(
+          <>
+        <button 
+          className="add-candidate-btn"
+          onClick={() => navigate('/add-interview')}
+        >
+          + Add Candidate
+        </button>
+        </>
+        )}
         
-        <div className="table-wrapper">
+
+        
+      </div>
+      <div className="table-wrapper">
         <table className="dashboard-table">
           <thead>
             <tr>
