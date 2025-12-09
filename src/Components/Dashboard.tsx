@@ -3,7 +3,6 @@ import { tableHeaders } from './Constants';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Footer from './Footer/Footer';
 
 interface Candidate {
   id: number;
