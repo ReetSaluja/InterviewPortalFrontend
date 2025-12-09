@@ -80,6 +80,17 @@
   justify-content: flex-start;      /* Aligns logo to left */
 }
 
+/* ACCENTURE LOGO LINK - Link wrapper for logo */
+.footer-logo a {
+  display: inline-block;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footer-logo a:hover {
+  opacity: 0.8;
+}
+
 /* ACCENTURE ICON - Purple logo image */
 .accenture-icon {
   width: 72px;

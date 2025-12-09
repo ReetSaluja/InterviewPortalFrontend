@@ -119,14 +119,21 @@
 /* FIELD LABEL - Bold label text above input fields */
 .field-label {
   font-weight: 700;
-  margin: 10px 0 6px;
+  margin: 10px 0 8px; /* Reset to normal, form-group margin handles spacing */
   font-size: 14px;
   color: #424242;
 }
 
+/* REQUIRED STAR - Red asterisk for required fields */
+.required-star {
+  color: red;
+  margin-left: 4px;
+}
+
 /* FORM GROUP - Container for input field and spacing */
 .form-group {
-  margin-bottom: 16px;  /* Space between form fields */
+  margin-bottom: 24px;  /* Add space after input box */
+  position: relative; /* For positioning context */
 }
 
 /* INPUT FIELDS - Email and password inputs with light blue background */
@@ -160,10 +167,39 @@
 }
 
 /* INPUT FOCUS STATE - Blue border and subtle shadow when focused */
-.form-group input:focus,
-.form-group select:focus {
+.form-group input:focus:not(.error-input),
+.form-group select:focus:not(.error-input) {
   border-color: var(--accent-blue);        /* Blue border on focus */
   box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.12); /* Blue glow effect */
+}
+
+/* ERROR INPUT STATE - Red border for fields with validation errors */
+.form-group input.error-input,
+.form-group select.error-input {
+  border-color: red !important;
+  border-width: 2px !important;
+}
+
+.form-group input.error-input:focus,
+.form-group select.error-input:focus {
+  border-color: red !important;
+  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.12) !important; /* Red glow for error fields */
+}
+
+/* ERROR TEXT - Red error message displayed below input fields */
+.login-error-text {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  margin-left: 0;
+  padding-left: 0;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 /* FORM FOOTER ROW - Contains show password checkbox and forgot password link */
