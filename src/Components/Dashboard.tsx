@@ -3,7 +3,6 @@ import { tableHeaders } from './Constants';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Footer from './Footer/Footer';
 
 interface Candidate {
   id: number;
@@ -85,16 +84,25 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        <h1>Dashboard</h1>
-        <button 
-          className="add-candidate-btn"
-          onClick={() => navigate('/add-interview')}
-        >
-          + Add Candidate
-        </button>
-      </div>
-      <div className="table-wrapper">
+        {/* Dashboard Actions */}
+        <div className="dashboard-actions">
+          <button 
+            className="import-btn"
+            onClick={() => console.log('Import Data')}
+            type="button"
+          >
+            Import Data
+          </button>
+          <button 
+            className="add-candidate-btn"
+            onClick={() => navigate('/add-interview')}
+            type="button"
+          >
+            + Add Candidate
+          </button>
+        </div>
+        
+        <div className="table-wrapper">
         <table className="dashboard-table">
           <thead>
             <tr>

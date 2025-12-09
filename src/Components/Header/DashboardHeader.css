@@ -1,0 +1,78 @@
+/**
+ * DASHBOARD HEADER STYLES - Accenture Corporate Design
+ * 
+ * Brand Colors:
+ * - Accenture Purple: #A100FF
+ * - Black: #000000
+ * - White: #FFFFFF
+ */
+
+/* DASHBOARD PAGE HEADER - Accenture Style */
+.dashboard-page-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 24px 40px;
+  background: #FFFFFF;
+  border-bottom: 3px solid #A100FF;
+}
+
+/* PAGE TITLE - Accenture Typography */
+.dashboard-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+/* Purple accent bar effect */
+.dashboard-page-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #A100FF;
+}
+
+/* RESPONSIVE STYLES - Tablet */
+@media (max-width: 992px) {
+  .dashboard-page-header {
+    padding: 20px 32px;
+  }
+  
+  .dashboard-page-title {
+    font-size: 22px;
+  }
+}
+
+/* RESPONSIVE STYLES - Small tablet */
+@media (max-width: 768px) {
+  .dashboard-page-header {
+    padding: 16px 24px;
+    justify-content: center;
+  }
+  
+  .dashboard-page-title {
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .dashboard-page-header::before {
+    display: none;
+  }
+}
+
+/* RESPONSIVE STYLES - Mobile */
+@media (max-width: 480px) {
+  .dashboard-page-header {
+    padding: 14px 16px;
+  }
+  
+  .dashboard-page-title {
+    font-size: 18px;
+  }
+}
