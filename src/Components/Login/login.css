@@ -136,18 +136,23 @@
   position: relative; /* For positioning context */
 }
 
-/* INPUT FIELDS - Email and password inputs with light blue background */
+/* INPUT FIELDS - Email and password inputs matching AddInterview style */
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 14px 12px;
-  font-size: 16px;
-  border-radius: 2px;
-  border: 2px solid var(--input-border);  /* Light blue border */
-  background: var(--input-bg);            /* Light blue background */
+  padding: .63rem 3.13rem .63rem .94rem;
+  font-size: 1rem;
+  border-radius: 0;                        /* No rounded corners */
+  border: 0.0625rem solid #4A4A4A;         /* Gray border matching AddInterview */
+  background: #FFFFFF;                     /* White background */
+  background-image: none;                  /* Remove unwanted browser styling */
+  color: #000000;                          /* Black text */
   outline: none;
   transition: 0.2s;                        /* Smooth focus transition */
   box-sizing: border-box;
+  box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075); /* Soft inner shadow */
+  font-family: "Graphik Regular", "Arial", Sans-Serif; /* Matching font */
+  line-height: 1.6em;                      /* Matching line height */
 }
 
 /* SELECT DROPDOWN SPECIFIC STYLES */
@@ -158,6 +163,7 @@
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 40px;
+  background-color: #FFFFFF;                /* White background matching AddInterview */
 }
 
 .form-group select:disabled {
@@ -166,33 +172,35 @@
   opacity: 0.6;
 }
 
-/* INPUT FOCUS STATE - Blue border and subtle shadow when focused */
+/* INPUT FOCUS STATE - Black border and blue glow matching AddInterview */
 .form-group input:focus:not(.error-input),
 .form-group select:focus:not(.error-input) {
-  border-color: var(--accent-blue);        /* Blue border on focus */
-  box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.12); /* Blue glow effect */
+  border: 1px solid #000000;               /* Black border on focus */
+  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6); /* Blue glow effect matching AddInterview */
 }
 
-/* ERROR INPUT STATE - Red border for fields with validation errors */
+/* ERROR INPUT STATE - Red border for fields with validation errors matching AddInterview */
 .form-group input.error-input,
 .form-group select.error-input {
-  border-color: red !important;
-  border-width: 2px !important;
+  border-color: red !important;  /* Matching AddInterview error style */
+  border-width: 0.0625rem !important;  /* Matching AddInterview border width */
 }
 
 .form-group input.error-input:focus,
 .form-group select.error-input:focus {
   border-color: red !important;
-  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.12) !important; /* Red glow for error fields */
+  border-width: 0.0625rem !important;
+  box-shadow: 0 0 8px rgba(0, 102, 255, 0.6); /* Blue glow matching AddInterview focus */
 }
 
-/* ERROR TEXT - Red error message displayed below input fields */
-.login-error-text {
-  color: red;
-  font-size: 13px;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  margin-left: 0;
+/* ERROR TEXT - Red error message matching AddInterview style */
+.login-error-text,
+.error-text {
+  color: red;                          /* Error message text color */
+  font-size: 13px;                     /* Smaller text matching AddInterview */
+  margin-top: -10px;                   /* Pull text upward matching AddInterview */
+  margin-bottom: 0;                     /* Remove bottom margin */
+  margin-left: 0;                      /* Left align */
   padding-left: 0;
   display: block;
   visibility: visible;
@@ -298,4 +306,17 @@
     gap: 10px;
   }
   .login-page { padding-top: 80px; }
+}
+
+/* OVERRIDE CHROME AUTOFILL BLUE - Matching AddInterview styles */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group select:-webkit-autofill,
+.form-group select:-webkit-autofill:hover,
+.form-group select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important; /* Force white autofill background */
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;          /* Same for other browsers */
+  background-color: #ffffff !important;                        /* White background */
+  -webkit-text-fill-color: #000000;                            /* Black input text */
 }

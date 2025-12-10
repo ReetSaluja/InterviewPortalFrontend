@@ -15,7 +15,7 @@ import Labels, {
 import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
@@ -63,7 +63,13 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
   }
 
   const navigate=useNavigate();
+  const location = useLocation();
   const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/* interviewers list -initially an empty array*/
+  
+  // Check if we're in edit mode
+  const editCandidate = location.state?.candidate;
+  const isEditMode = location.state?.isEdit && editCandidate;
+  const candidateId = editCandidate?.id;
 
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
@@ -76,6 +82,56 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     };
     LoadInterviewers();
   }, []);/*empty dependency array means this effect runs only once when the component loads*/
+
+  // Fetch full candidate details if in edit mode
+  useEffect(() => {
+    const fetchCandidateDetails = async () => {
+      if (isEditMode && candidateId) {
+        try {
+          // Fetch full candidate details including InterviewerId and ClientName
+          const response = await axios.get(`http://127.0.0.1:8000/candidates/${candidateId}`);
+          const candidate = response.data;
+          
+          // Populate form with candidate data
+          setFormData({
+            CandidateName: candidate.CandidateName || "",
+            TotalExperience: candidate.TotalExperience || "",
+            SkillSet: candidate.SkillSet || "",
+            CurrentOrganization: candidate.CurrentOrganization || "",
+            NoticePeriod: candidate.NoticePeriod || "",
+            Interviewer: candidate.InterviewerId?.toString() || candidate.Interviewer || "",
+            Feedback: candidate.Feedback || "",
+            Remarks: candidate.Remarks || "",
+            ClientName: candidate.ClientName || "",
+            ClientManagerName: candidate.ClientManagerName || "",
+          });
+        } catch (error: any) {
+          console.error("Error fetching candidate details:", error);
+          // If GET fails, try using the data passed from Dashboard as fallback
+          if (editCandidate) {
+            setFormData({
+              CandidateName: editCandidate.CandidateName || "",
+              TotalExperience: editCandidate.TotalExperience || "",
+              SkillSet: editCandidate.SkillSet || "",
+              CurrentOrganization: editCandidate.CurrentOrganization || "",
+              NoticePeriod: editCandidate.NoticePeriod || "",
+              Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
+              Feedback: editCandidate.Feedback || "",
+              Remarks: editCandidate.Remarks || "",
+              ClientName: editCandidate.ClientName || "",
+              ClientManagerName: editCandidate.ClientManagerName || "",
+            });
+          }
+          // Only show error if we don't have fallback data
+          if (!editCandidate) {
+            toast.error("Error loading candidate details. Please try again.");
+          }
+        }
+      }
+    };
+    
+    fetchCandidateDetails();
+  }, [isEditMode, candidateId, editCandidate]);
 
   // ------------ form data ------------
   const [formData, setFormData] = useState<InterviewFormData>({
@@ -166,35 +222,49 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         ...formData,
         InterviewerId:formData.Interviewer ? Number(formData.Interviewer):null,
       };
-      await axios.post("http://127.0.0.1:8000/candidates/", payload);
+      
+      if (isEditMode && candidateId) {
+        // Update existing candidate using PUT
+        await axios.put(`http://127.0.0.1:8000/candidates/${candidateId}`, payload);
+        toast.success("Candidate Updated Successfully");
+      } else {
+        // Create new candidate using POST
+        await axios.post("http://127.0.0.1:8000/candidates/", payload);
+        toast.success("Form Submitted");
+      }
 
       
       
       console.log("Saved", payload);
-      toast.success("Form Submitted");
-
-      setFormData({
-        CandidateName: "",
-        TotalExperience: "",
-        SkillSet: "",
-        CurrentOrganization: "",
-        NoticePeriod: "",
-        Interviewer: "",
-        Feedback: "",
-        Remarks: "",
-        ClientName:"",
-        ClientManagerName:"",
-      });
+      
+      // Reset form only if not in edit mode (stay on page for edit)
+      if (!isEditMode) {
+        setFormData({
+          CandidateName: "",
+          TotalExperience: "",
+          SkillSet: "",
+          CurrentOrganization: "",
+          NoticePeriod: "",
+          Interviewer: "",
+          Feedback: "",
+          Remarks: "",
+          ClientName:"",
+          ClientManagerName:"",
+        });
+      }
       setErrors({});
+      
+      // Navigate back to dashboard after save
+      navigate("/dashboard");
     } catch (err) {
-      toast.error("Error saving candidate");
+      toast.error(isEditMode ? "Error updating candidate" : "Error saving candidate");
       console.error(err);
     }
   };
 
   return (
     <>
-      <h1 className="Page_Heading">Add Candidate</h1>
+      <h1 className="Page_Heading">{isEditMode ? "Edit Candidate" : "Add Candidate"}</h1>
       <form className="form-box" onSubmit={handleSave}>
         
         {/* Candidate Name */}

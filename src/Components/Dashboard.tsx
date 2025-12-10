@@ -19,6 +19,10 @@ interface Candidate {
   NoticePeriod: string;
   Feedback?: string;
   Remarks?: string;
+  InterviewerId?: number;
+  Interviewer?: string;
+  ClientName?: string;
+  ClientManagerName?: string;
 }
 
 function Dashboard() {
@@ -47,8 +51,21 @@ if(storedUser){
   // Edit button cell renderer
   const EditButtonRenderer = useCallback((params: ICellRendererParams<Candidate>) => {
     const handleEdit = () => {
-      console.log('Edit clicked for candidate:', params.data);
+      if (role === "admin" && params.data) {
+        // Navigate to AddInterview page with candidate data for editing
+        navigate('/add-interview', { 
+          state: { 
+            candidate: params.data,
+            isEdit: true 
+          } 
+        });
+      }
     };
+
+    // Only show Edit button for admin role
+    if (role !== "admin") {
+      return null;
+    }
 
     return (
       <button 
@@ -61,7 +78,7 @@ if(storedUser){
         <span>Edit</span>
       </button>
     );
-  }, []);
+  }, [navigate, role]);
 
   // AG Grid Column Definitions
   const columnDefs = useMemo<ColDef<Candidate>[]>(() => [
@@ -113,7 +130,7 @@ if(storedUser){
       sortable: true,
       filter: true,
     },
-    { 
+    ...(role === "admin" ? [{
       headerName: 'Action', 
       field: 'id',
       width: 100,
@@ -121,8 +138,8 @@ if(storedUser){
       sortable: false,
       filter: false,
       cellRenderer: EditButtonRenderer,
-    },
-  ], [EditButtonRenderer]);
+    }] : []),
+  ], [EditButtonRenderer, role]);
 
   // Default column properties
   const defaultColDef = useMemo<ColDef>(() => ({
