@@ -51,9 +51,25 @@
     height: 60px;                    /* Logo height */
 }
 
-/* LOGO LINK - Removes default link styling */
+/* LOGO LINK/BUTTON - Removes default link/button styling */
 .acn-logo {
     text-decoration: none;  /* No underline on logo link */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    outline: none;  /* Remove focus outline */
+}
+
+/* Remove focus outline and any focus styling */
+.acn-logo:focus,
+.acn-logo:focus-visible,
+.acn-logo:active {
+    outline: none;
+    border: none;
+    box-shadow: none;
 }
 
 /* HEADER RIGHT ICONS CONTAINER - Container for profile and menu icons */

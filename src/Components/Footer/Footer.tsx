@@ -19,40 +19,40 @@ import { FaLinkedin, FaTwitter, FaFacebook, FaYoutube } from "react-icons/fa";
 
 /* NAVIGATION LINKS - Main footer navigation items */
 const NAV_LINKS = [
-  { label: "ABOUT US", href: "#" },
-  { label: "CONTACT US", href: "#" },
-  { label: "CAREERS", href: "#" },
-  { label: "LOCATIONS", href: "#" },
+  { label: "ABOUT US", href: "https://www.accenture.com/us-en/about/company-index" },
+  { label: "CONTACT US", href: "https://www.accenture.com/in-en/about/contact-us" },
+  { label: "CAREERS", href: "https://www.accenture.com/in-en/careers" },
+  { label: "LOCATIONS", href: "https://www.accenture.com/in-en/about/location" },
 ];
 
 /* LEGAL LINKS - Footer bottom legal/policy links */
 const LEGAL_LINKS = [
-  { label: "Privacy Statement", href: "#" },
-  { label: "Terms & Conditions", href: "#" },
-  { label: "Cookie Policy", href: "#" },
-  { label: "Accessibility Statement", href: "#" },
+  { label: "Privacy Statement", href: "https://www.accenture.com/in-en/support/privacy-policy" },
+  { label: "Terms & Conditions", href: "https://www.accenture.com/in-en/terms-of-use" },
+  { label: "Cookie Policy", href: "https://www.accenture.com/us-en/support/company-cookies-similar-technology" },
+  { label: "Accessibility Statement", href: "https://www.accenture.com/us-en/support/accessibility-statement" },
 ];
 
 /* SOCIAL MEDIA LINKS - Icons with links to social platforms */
 const SOCIAL_LINKS = [
   { 
     name: "LinkedIn", 
-    href: "#",
+    href: "https://www.linkedin.com/company/accenture/",
     icon: <FaLinkedin />  /* React icon component */
   },
   { 
     name: "Twitter", 
-    href: "#",
+    href: "https://www.linkedin.com/company/accenture/",
     icon: <FaTwitter />
   },
   { 
     name: "Facebook", 
-    href: "#",
+    href: "https://www.facebook.com/accenture",
     icon: <FaFacebook />
   },
   { 
     name: "YouTube", 
-    href: "#",
+    href: "https://www.youtube.com/user/Accenture",
     icon: <FaYoutube />
   },
 ];
@@ -66,7 +66,9 @@ const Footer = () => {
         <div className="footer-top">
           {/* LEFT COLUMN: Accenture Logo */}
           <div className="footer-logo">
-            <img src={AC2} className="accenture-icon" alt="Accenture Icon" />
+            <a href="https://www.accenture.com/in-en" target="_blank" rel="noopener noreferrer" aria-label="Visit Accenture India">
+              <img src={AC2} className="accenture-icon" alt="Accenture Icon" />
+            </a>
           </div>
 
           {/* CENTER COLUMN: Navigation Links */}
@@ -75,7 +77,12 @@ const Footer = () => {
               <div className="nav-inner">
                 {/* Map through NAV_LINKS to render each navigation link */}
                 {NAV_LINKS.map((lnk) => (
-                  <a key={lnk.label} href={lnk.href} className="footer-link">
+                  <a 
+                    key={lnk.label} 
+                    href={lnk.href} 
+                    className="footer-link"
+                    {...(lnk.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
                     {lnk.label}
                   </a>
                 ))}
@@ -92,6 +99,7 @@ const Footer = () => {
                 href={social.href} 
                 className="social-icon-link"
                 aria-label={social.name}  /* Accessibility label */
+                {...(social.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               >
                 {social.icon}
               </a>
@@ -108,7 +116,12 @@ const Footer = () => {
           <div className="legal-links">
             {/* Map through LEGAL_LINKS to render each legal link */}
             {LEGAL_LINKS.map((link) => (
-              <a key={link.label} href={link.href} className="legal-link">
+              <a 
+                key={link.label} 
+                href={link.href} 
+                className="legal-link"
+                {...(link.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
                 {link.label}
               </a>
             ))}

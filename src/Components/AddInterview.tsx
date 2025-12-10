@@ -15,7 +15,7 @@ import Labels, {
 import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
@@ -63,7 +63,15 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
   }
 
   const navigate=useNavigate();
+  const location = useLocation();
   const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/* interviewers list -initially an empty array*/
+  
+  // Check if we're in edit mode
+  const editCandidate = location.state?.candidate;
+  const isEditMode = location.state?.isEdit && editCandidate;
+  const editMode = location.state?.editMode; // "admin" or "interviewer"
+  const candidateId = editCandidate?.id;
+  const isInterviewerEditMode = isEditMode && editMode === "interviewer";
 
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
@@ -76,6 +84,56 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     };
     LoadInterviewers();
   }, []);/*empty dependency array means this effect runs only once when the component loads*/
+
+  // Fetch full candidate details if in edit mode
+  useEffect(() => {
+    const fetchCandidateDetails = async () => {
+      if (isEditMode && candidateId) {
+        try {
+          // Fetch full candidate details including InterviewerId and ClientName
+          const response = await axios.get(`http://127.0.0.1:8000/candidates/${candidateId}`);
+          const candidate = response.data;
+          
+          // Populate form with candidate data
+          setFormData({
+            CandidateName: candidate.CandidateName || "",
+            TotalExperience: candidate.TotalExperience || "",
+            SkillSet: candidate.SkillSet || "",
+            CurrentOrganization: candidate.CurrentOrganization || "",
+            NoticePeriod: candidate.NoticePeriod || "",
+            Interviewer: candidate.InterviewerId?.toString() || candidate.Interviewer || "",
+            Feedback: candidate.Feedback || "",
+            Remarks: candidate.Remarks || "",
+            ClientName: candidate.ClientName || "",
+            ClientManagerName: candidate.ClientManagerName || "",
+          });
+        } catch (error: any) {
+          console.error("Error fetching candidate details:", error);
+          // If GET fails, try using the data passed from Dashboard as fallback
+          if (editCandidate) {
+            setFormData({
+              CandidateName: editCandidate.CandidateName || "",
+              TotalExperience: editCandidate.TotalExperience || "",
+              SkillSet: editCandidate.SkillSet || "",
+              CurrentOrganization: editCandidate.CurrentOrganization || "",
+              NoticePeriod: editCandidate.NoticePeriod || "",
+              Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
+              Feedback: editCandidate.Feedback || "",
+              Remarks: editCandidate.Remarks || "",
+              ClientName: editCandidate.ClientName || "",
+              ClientManagerName: editCandidate.ClientManagerName || "",
+            });
+          }
+          // Only show error if we don't have fallback data
+          if (!editCandidate) {
+            toast.error("Error loading candidate details. Please try again.");
+          }
+        }
+      }
+    };
+    
+    fetchCandidateDetails();
+  }, [isEditMode, candidateId, editCandidate]);
 
   // ------------ form data ------------
   const [formData, setFormData] = useState<InterviewFormData>({
@@ -118,41 +176,52 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     event.preventDefault(); /*Stops the browser from doing its default form submission (page reload)*/
     const newErrors: InterviewFormErrors = {};
 
-    if (!formData.CandidateName.trim()) {
-      newErrors.CandidateName = " Please Enter Candidate Name";
-    }
-    if (!formData.TotalExperience.trim()) {
-      newErrors.TotalExperience = "Please Enter Total Experience";
-    }
-    if (!formData.SkillSet.trim()) {
-      newErrors.SkillSet = " Please Enter SkillSet ";
-    }
-    if (!formData.CurrentOrganization.trim()) {
-      newErrors.CurrentOrganization = "Please Enter Current Organization";
-    }
-    if (!formData.NoticePeriod.trim()) {
-      newErrors.NoticePeriod = "Please Select Notice Period";
-    }
-
-    // role-based validation
-    if (role === "admin") {
-      if (!formData.Interviewer.trim()) {
-        newErrors.Interviewer = "Please Select Interviewer";
-      }
-    }
-    if(!formData.ClientName.trim()){
-      newErrors.ClientName="Please Select Client Name";
-    }
-    if(!formData.ClientManagerName.trim()){
-      newErrors.ClientManagerName="Please Enter Client Manager Name";
-    }
-
-    if (role === "interviewer") {
+    // If interviewer is editing, only validate Feedback and Remarks
+    if (isInterviewerEditMode) {
       if (!formData.Feedback.trim()) {
         newErrors.Feedback = "Please Select Feedback";
       }
       if (!formData.Remarks.trim()) {
         newErrors.Remarks = "Please Enter Remarks";
+      }
+    } else {
+      // Regular validation for admin or new candidate creation
+      if (!formData.CandidateName.trim()) {
+        newErrors.CandidateName = " Please Enter Candidate Name";
+      }
+      if (!formData.TotalExperience.trim()) {
+        newErrors.TotalExperience = "Please Enter Total Experience";
+      }
+      if (!formData.SkillSet.trim()) {
+        newErrors.SkillSet = " Please Enter SkillSet ";
+      }
+      if (!formData.CurrentOrganization.trim()) {
+        newErrors.CurrentOrganization = "Please Enter Current Organization";
+      }
+      if (!formData.NoticePeriod.trim()) {
+        newErrors.NoticePeriod = "Please Select Notice Period";
+      }
+
+      // role-based validation
+      if (role === "admin") {
+        if (!formData.Interviewer.trim()) {
+          newErrors.Interviewer = "Please Select Interviewer";
+        }
+      }
+      if(!formData.ClientName.trim()){
+        newErrors.ClientName="Please Select Client Name";
+      }
+      if(!formData.ClientManagerName.trim()){
+        newErrors.ClientManagerName="Please Enter Client Manager Name";
+      }
+
+      if (role === "interviewer") {
+        if (!formData.Feedback.trim()) {
+          newErrors.Feedback = "Please Select Feedback";
+        }
+        if (!formData.Remarks.trim()) {
+          newErrors.Remarks = "Please Enter Remarks";
+        }
       }
     }
 
@@ -162,50 +231,80 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     }
 
     try {
-      const payload={
-        ...formData,
-        InterviewerId:formData.Interviewer ? Number(formData.Interviewer):null,
-      };
-      await axios.post("http://127.0.0.1:8000/candidates/", payload);
+      let payload;
+      
+      if (isInterviewerEditMode) {
+        // For interviewer edit mode, only send Feedback and Remarks
+        payload = {
+          Feedback: formData.Feedback,
+          Remarks: formData.Remarks,
+        };
+      } else {
+        // For admin edit or new candidate, send all fields
+        payload = {
+          ...formData,
+          InterviewerId: formData.Interviewer ? Number(formData.Interviewer) : null,
+        };
+      }
+      
+      if (isEditMode && candidateId) {
+        // Update existing candidate using PUT
+        await axios.put(`http://127.0.0.1:8000/candidates/${candidateId}`, payload);
+        toast.success(isInterviewerEditMode ? "Feedback Updated Successfully" : "Candidate Updated Successfully");
+      } else {
+        // Create new candidate using POST
+        await axios.post("http://127.0.0.1:8000/candidates/", payload);
+        toast.success("Form Submitted");
+      }
 
       
       
       console.log("Saved", payload);
-      toast.success("Form Submitted");
-
-      setFormData({
-        CandidateName: "",
-        TotalExperience: "",
-        SkillSet: "",
-        CurrentOrganization: "",
-        NoticePeriod: "",
-        Interviewer: "",
-        Feedback: "",
-        Remarks: "",
-        ClientName:"",
-        ClientManagerName:"",
-      });
+      
+      // Reset form only if not in edit mode (stay on page for edit)
+      if (!isEditMode) {
+        setFormData({
+          CandidateName: "",
+          TotalExperience: "",
+          SkillSet: "",
+          CurrentOrganization: "",
+          NoticePeriod: "",
+          Interviewer: "",
+          Feedback: "",
+          Remarks: "",
+          ClientName:"",
+          ClientManagerName:"",
+        });
+      }
       setErrors({});
+      
+      // Navigate back to dashboard after save
+      navigate("/dashboard");
     } catch (err) {
-      toast.error("Error saving candidate");
+      toast.error(isEditMode ? "Error updating candidate" : "Error saving candidate");
       console.error(err);
     }
   };
 
   return (
     <>
-      <h1 className="Page_Heading">Add Candidate</h1>
+      <h1 className="Page_Heading">
+        {isInterviewerEditMode 
+          ? "Add Feedback" 
+          : isEditMode 
+          ? "Edit Candidate" 
+          : "Add Candidate"}
+      </h1>
       <form className="form-box" onSubmit={handleSave}>
         
         {/* Candidate Name */}
         <div className="form-row">
-          <Labels text={candidateNameLabel} required />
+          <Labels text={candidateNameLabel} required={!isInterviewerEditMode} />
           <input
             name="CandidateName"
             value={formData.CandidateName}
             onChange={handleChange}
-            readOnly={role === "interviewer"}
-
+            readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.CandidateName ? "error-input" : ""}
           />
         </div>
@@ -215,13 +314,13 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
 
         {/* Total Experience */}
         <div className="form-row">
-          <Labels text={totalExperienceLabel} required />
+          <Labels text={totalExperienceLabel} required={!isInterviewerEditMode} />
           <input
             type="number"
             name="TotalExperience"
             value={formData.TotalExperience}
             onChange={handleChange}
-            readOnly={role === "interviewer"}
+            readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.TotalExperience ? "error-input" : ""}
           />
         </div>
@@ -231,12 +330,12 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
 
         {/* Skill Set */}
         <div className="form-row">
-          <Labels text={skillSetLabel} required />
+          <Labels text={skillSetLabel} required={!isInterviewerEditMode} />
           <input
             name="SkillSet"
             value={formData.SkillSet}
             onChange={handleChange}
-            readOnly={role === "interviewer"}
+            readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.SkillSet ? "error-input" : ""}
           />
         </div>
@@ -244,12 +343,12 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
 
         {/* Current Org */}
         <div className="form-row">
-          <Labels text={currentOrganizationLabel} required />
+          <Labels text={currentOrganizationLabel} required={!isInterviewerEditMode} />
           <input
             name="CurrentOrganization"
             value={formData.CurrentOrganization}
             onChange={handleChange}
-            readOnly={role === "interviewer"}
+            readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.CurrentOrganization ? "error-input" : ""}
           />
         </div>
@@ -259,12 +358,12 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
 
         {/* Notice Period */}
         <div className="form-row">
-          <Labels text={noticePeriodLabel} required />
+          <Labels text={noticePeriodLabel} required={!isInterviewerEditMode} />
           <select
             name="NoticePeriod"
             value={formData.NoticePeriod}
             onChange={handleChange}
-            disabled={role === "interviewer"}
+            disabled={role === "interviewer" || isInterviewerEditMode}
             className={errors.NoticePeriod ? "error-input" : ""}
           >
             <option value="" disabled>
@@ -281,8 +380,8 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
           <p className="error-text">{errors.NoticePeriod}</p>
         )}
 
-        {/* Interviewer dropdown (ONLY admin) */}
-        {role === "admin" && (
+        {/* Interviewer dropdown (ONLY admin, hidden when interviewer is editing) */}
+        {role === "admin" && !isInterviewerEditMode && (
           <>
             <div className="form-row">
               <Labels text={InterviewerLabel} required />
@@ -311,11 +410,12 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
 
 
         <div className="form-row">
-        <Labels text={ClientNameLabel} required />
+        <Labels text={ClientNameLabel} required={!isInterviewerEditMode} />
         <select
         name="ClientName"
         value={formData.ClientName}
         onChange={handleChange}
+        disabled={isInterviewerEditMode}
         className={errors.ClientName ? "error-input": ""}
         >
           <option value="" disabled>Select</option>
@@ -330,11 +430,12 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         <p className="error-text">{errors.ClientName}</p>)}
 
         <div className="form-row">
-          <Labels text={ClientManagerNameLabel} required />
+          <Labels text={ClientManagerNameLabel} required={!isInterviewerEditMode} />
           <input
             name="ClientManagerName"
             value={formData.ClientManagerName}
             onChange={handleChange}
+            readOnly={isInterviewerEditMode}
             className={errors.ClientManagerName ? "error-input" : ""}
           />
         </div>
@@ -344,8 +445,8 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
       
 
 
-        {/* Feedback + Remarks (ONLY interviewer) */}
-        {role === "interviewer" && (
+        {/* Feedback + Remarks - Always show when interviewer role OR when interviewer is editing */}
+        {(role === "interviewer" || isInterviewerEditMode) && (
           <>
             <div className="form-row">
               <Labels text={FeedbackLabel} required />

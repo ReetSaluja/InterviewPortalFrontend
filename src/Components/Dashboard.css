@@ -625,7 +625,7 @@
   height: 32px;
   border: none;
   border-radius: 6px;
-  background-color: #3b82f6;
+  background-color: #000000;
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -634,7 +634,7 @@
 }
 
 .edit-btn:hover {
-  background-color: #2563eb;
+  background-color: #333333;
   transform: scale(1.02);
 }
 

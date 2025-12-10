@@ -32,7 +32,10 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");              // User's email input
   const [password, setPassword] = useState<string>("");         // User's password input
   const [activeRole, setActiveRole] = useState<UserRole>("Admin"); // Selected role tab
-  const [error, setError] = useState<string | null>(null);     // Error message to display
+  
+  // Field-level error states
+  const [emailError, setEmailError] = useState<string>("");    // Email field error
+  const [passwordError, setPasswordError] = useState<string>(""); // Password field error
 
   // UI state management
   const [showPassword, setShowPassword] = useState<boolean>(false); // Toggle password visibility
@@ -52,7 +55,8 @@ const Login = () => {
       const roleParam = activeRole.toLowerCase();
       setLoadingEmails(true);
       setEmail(""); // Clear selected email when role changes
-      setError(null);
+      setEmailError(""); // Clear email error when role changes
+      setPasswordError(""); // Clear password error when role changes
 
       try {
         const res = await fetch(
@@ -72,7 +76,7 @@ const Login = () => {
             errBody?.message ||
             errBody?.error ||
             `Failed to fetch users (${res.status})`;
-          setError(msg);
+          setEmailError(msg);
           setEmails([]);
           setLoadingEmails(false);
           return;
@@ -94,7 +98,7 @@ const Login = () => {
         }
       } catch (err: any) {
         console.error("Error fetching emails:", err);
-        setError(err?.message || "Network error while fetching emails.");
+        setEmailError(err?.message || "Network error while fetching emails.");
         setEmails([]);
       } finally {
         setLoadingEmails(false);
@@ -110,7 +114,26 @@ const Login = () => {
    */
   const handleRoleChange = (role: UserRole) => {
     setActiveRole(role);
-    setError(null);
+    setEmailError("");
+    setPasswordError("");
+  };
+  
+  /**
+   * Handles email field changes
+   * Clears email error when user starts typing
+   */
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setEmailError(""); // Clear error when user changes email
+  };
+  
+  /**
+   * Handles password field changes
+   * Clears password error when user starts typing
+   */
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setPasswordError(""); // Clear error when user changes password
   };
 
   /**
@@ -128,11 +151,32 @@ const Login = () => {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
-    setError(null);    // Clear any previous errors
+    setEmailError(""); // Clear email error
+    setPasswordError(""); // Clear password error
 
-    // Basic client-side validation - check if fields are filled
-    if (!email.trim() || !password) {
-      setError("Please enter both email and password.");
+    // Field-level validation
+    let hasErrors = false;
+    
+    // Email validation
+    if (!email.trim()) {
+      setEmailError("Please Enter Email Address");
+      hasErrors = true;
+    } else {
+      // Basic email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        setEmailError("Please Enter a Valid Email Address");
+        hasErrors = true;
+      }
+    }
+    
+    // Password validation
+    if (!password) {
+      setPasswordError("Please Enter Password");
+      hasErrors = true;
+    }
+    
+    if (hasErrors) {
       return;
     }
 
@@ -163,9 +207,11 @@ const Login = () => {
           errBody?.message ||
           errBody?.error ||
           `Login failed (${res.status})`;
-        setError(msg);
+        // Show error on both email and password fields for login failures
+        setEmailError(msg);
+        setPasswordError(msg);
         setLoading(false);
-        return;
+        return; // IMPORTANT: Don't navigate on error
       }
 
       // Parse successful response - server returns user object
@@ -173,9 +219,10 @@ const Login = () => {
 
       // Validate that user object is present and has required fields
       if (!user || !user.email) {
-        setError("Unexpected server response. Please try again.");
+        setEmailError("Unexpected server response. Please try again.");
+        setPasswordError("Unexpected server response. Please try again.");
         setLoading(false);
-        return;
+        return; // IMPORTANT: Don't navigate on error
       }
 
       // Save user data to sessionStorage (cleared when browser tab closes)
@@ -194,15 +241,24 @@ const Login = () => {
       if (serverRole === "admin") setActiveRole("Admin");
       else setActiveRole("Interviewer");
 
-      // Mark user as logged in and navigate to dashboard
+      // Mark user as logged in BEFORE navigation
       setLoggedIn(true);
       setLoading(false);
+      
+      // Only navigate if login was successful
+      // Clear any errors before navigation
+      setEmailError("");
+      setPasswordError("");
       navigate("/dashboard");
     } catch (err: any) {
       // Handle network errors or unexpected exceptions
       console.error("Login error:", err);
-      setError(err?.message || "Network error while signing in.");
+      const errorMsg = err?.message || "Network error while signing in. Please try again.";
+      setEmailError(errorMsg);
+      setPasswordError(errorMsg);
       setLoading(false);
+      // IMPORTANT: Don't navigate on error - stay on login page
+      return;
     }
   };
 
@@ -263,40 +319,29 @@ const Login = () => {
 
             {/* LOGIN FORM - Handles form submission */}
             <form onSubmit={handleSubmit} noValidate>
-              {/* ERROR MESSAGE - Displays validation or API errors */}
-              {error && (
-                <div className="error-message" role="alert">
-                  {error}
-                </div>
-              )}
-
-              {/* EMAIL DROPDOWN FIELD */}
+              {/* EMAIL INPUT FIELD */}
               <label className="field-label" htmlFor="email">
-                Email Address
+                Email Address <span className="required-star">*</span>
               </label>
               <div className="form-group">
-                <select
+                <input
                   id="email"
+                  type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
+                  placeholder="Email Address"
                   required
                   autoComplete="email"
-                  disabled={loadingEmails}
-                >
-                  <option value="">
-                    {loadingEmails ? "Loading emails..." : "Email"}
-                  </option>
-                  {emails.map((emailOption) => (
-                    <option key={emailOption} value={emailOption}>
-                      {emailOption}
-                    </option>
-                  ))}
-                </select>
+                  className={emailError ? "error-input" : ""}
+                />
               </div>
+              {emailError && (
+                <p className="login-error-text">{emailError}</p>
+              )}
 
               {/* PASSWORD INPUT FIELD - Type changes based on showPassword state */}
               <label className="field-label" htmlFor="password">
-                Password
+                Password <span className="required-star">*</span>
               </label>
               <div className="form-group">
                 <input
@@ -304,11 +349,15 @@ const Login = () => {
                   type={showPassword ? "text" : "password"} // Toggle between text/password
                   placeholder="Password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   required
                   autoComplete="current-password"
+                  className={passwordError ? "error-input" : ""}
                 />
               </div>
+              {passwordError && (
+                <p className="login-error-text">{passwordError}</p>
+              )}
 
               {/* FOOTER ROW - Contains password visibility toggle and forgot password link */}
               <div className="form-footer-row">
