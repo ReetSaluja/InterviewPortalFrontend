@@ -123,18 +123,19 @@ const Header: React.FC = () => {
           <div className="primary-nav">
             {/* LOGO CONTAINER - Wraps the Accenture logo */}
             <div className="acn-logo-container">
-              {/* LOGO LINK - Clickable logo that navigates to home */}
-              <a 
-                href="/" 
+              {/* LOGO LINK - Clickable logo that navigates to dashboard */}
+              <button
+                onClick={() => navigate('/dashboard')}
                 className="acn-logo"
-                aria-label="Accenture Home"  /* Screen reader accessibility */
+                aria-label="Go to Dashboard"  /* Screen reader accessibility */
+                type="button"
               >
                 {/* LOGO ICON - Logo displayed as background image on span */}
                 {/* Using background-image allows for better control and cleaner HTML */}
                 <span className="acn-logo-icon" 
                       style={{ backgroundImage: `url(${logo})` }}>
                 </span> 
-              </a>
+              </button>
             </div>
             {/* Future navigation links would be added here */}
             

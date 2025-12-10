@@ -51,19 +51,20 @@ if(storedUser){
   // Edit button cell renderer
   const EditButtonRenderer = useCallback((params: ICellRendererParams<Candidate>) => {
     const handleEdit = () => {
-      if (role === "admin" && params.data) {
+      if ((role === "admin" || role === "interviewer") && params.data) {
         // Navigate to AddInterview page with candidate data for editing
         navigate('/add-interview', { 
           state: { 
             candidate: params.data,
-            isEdit: true 
+            isEdit: true,
+            editMode: role === "interviewer" ? "interviewer" : "admin" // Track edit mode
           } 
         });
       }
     };
 
-    // Only show Edit button for admin role
-    if (role !== "admin") {
+    // Show Edit button for both admin and interviewer roles
+    if (role !== "admin" && role !== "interviewer") {
       return null;
     }
 
@@ -72,7 +73,7 @@ if(storedUser){
         className="edit-btn"
         onClick={handleEdit}
         type="button"
-        title="Edit candidate"
+        title={role === "interviewer" ? "Add Feedback" : "Edit candidate"}
       >
         <FiEdit2 />
         <span>Edit</span>
@@ -130,7 +131,7 @@ if(storedUser){
       sortable: true,
       filter: true,
     },
-    ...(role === "admin" ? [{
+    ...((role === "admin" || role === "interviewer") ? [{
       headerName: 'Action', 
       field: 'id',
       width: 100,
