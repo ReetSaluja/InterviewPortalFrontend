@@ -8,6 +8,8 @@ export const noticePeriodLabel = "Notice Period";
 export const InterviewerLabel="Interviewer"
 export const FeedbackLabel="Feedback"
 export const RemarksLable="Remarks"
+export const ClientNameLabel="Client Name"
+export const ClientManagerNameLabel="Client Manager Name"
 
 type LabelProps={
     text:string;

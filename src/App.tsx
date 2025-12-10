@@ -4,6 +4,7 @@ import AddInterview from './Components/AddInterview';
 import { isLoggedIn } from './Components/Login/login'; 
 import type { JSX } from 'react';
 import Header from './Components/Header/Header';
+import DashboardHeader from './Components/Header/DashboardHeader';
 import Footer from './Components/Footer/Footer';
 import Dashboard from './Components/Dashboard';
 
@@ -40,7 +41,10 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute> 
-                  <Dashboard />
+                  <>
+                    <DashboardHeader title="Interview Dashboard" />
+                    <Dashboard />
+                  </>
                 </ProtectedRoute>
               }
             />
