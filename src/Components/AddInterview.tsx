@@ -89,43 +89,44 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
   useEffect(() => {
     const fetchCandidateDetails = async () => {
       if (isEditMode && candidateId) {
-        try {
-          // Fetch full candidate details including InterviewerId and ClientName
-          const response = await axios.get(`http://127.0.0.1:8000/candidates/${candidateId}`);
-          const candidate = response.data;
-          
-          // Populate form with candidate data
+        // Use the data passed from Dashboard (since single candidate endpoint returns 405)
+        if (editCandidate) {
           setFormData({
-            CandidateName: candidate.CandidateName || "",
-            TotalExperience: candidate.TotalExperience || "",
-            SkillSet: candidate.SkillSet || "",
-            CurrentOrganization: candidate.CurrentOrganization || "",
-            NoticePeriod: candidate.NoticePeriod || "",
-            Interviewer: candidate.InterviewerId?.toString() || candidate.Interviewer || "",
-            Feedback: candidate.Feedback || "",
-            Remarks: candidate.Remarks || "",
-            ClientName: candidate.ClientName || "",
-            ClientManagerName: candidate.ClientManagerName || "",
+            CandidateName: editCandidate.CandidateName || "",
+            TotalExperience: editCandidate.TotalExperience || "",
+            SkillSet: editCandidate.SkillSet || "",
+            CurrentOrganization: editCandidate.CurrentOrganization || "",
+            NoticePeriod: editCandidate.NoticePeriod || "",
+            Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
+            Feedback: editCandidate.Feedback || "",
+            Remarks: editCandidate.Remarks || "",
+            ClientName: editCandidate.ClientName || "",
+            ClientManagerName: editCandidate.ClientManagerName || "",
           });
-        } catch (error: any) {
-          console.error("Error fetching candidate details:", error);
-          // If GET fails, try using the data passed from Dashboard as fallback
-          if (editCandidate) {
-            setFormData({
-              CandidateName: editCandidate.CandidateName || "",
-              TotalExperience: editCandidate.TotalExperience || "",
-              SkillSet: editCandidate.SkillSet || "",
-              CurrentOrganization: editCandidate.CurrentOrganization || "",
-              NoticePeriod: editCandidate.NoticePeriod || "",
-              Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
-              Feedback: editCandidate.Feedback || "",
-              Remarks: editCandidate.Remarks || "",
-              ClientName: editCandidate.ClientName || "",
-              ClientManagerName: editCandidate.ClientManagerName || "",
-            });
-          }
-          // Only show error if we don't have fallback data
-          if (!editCandidate) {
+        } else {
+          // If no fallback data, try fetching from API
+          try {
+            // Try fetching all candidates and find the one we need
+            const response = await axios.get(`http://127.0.0.1:8000/candidates/`);
+            const candidates = Array.isArray(response.data) ? response.data : [];
+            const candidate = candidates.find((c: any) => c.id === candidateId);
+            
+            if (candidate) {
+              setFormData({
+                CandidateName: candidate.CandidateName || candidate.candidateName || "",
+                TotalExperience: candidate.TotalExperience || candidate.totalExperience || "",
+                SkillSet: candidate.SkillSet || candidate.skillSet || "",
+                CurrentOrganization: candidate.CurrentOrganization || candidate.currentOrganization || "",
+                NoticePeriod: candidate.NoticePeriod || candidate.noticePeriod || "",
+                Interviewer: candidate.InterviewerId?.toString() || candidate.interviewerId?.toString() || candidate.Interviewer || candidate.interviewer || "",
+                Feedback: candidate.Feedback || candidate.feedback || "",
+                Remarks: candidate.Remarks || candidate.remarks || "",
+                ClientName: candidate.ClientName || candidate.clientName || "",
+                ClientManagerName: candidate.ClientManagerName || candidate.clientManagerName || "",
+              });
+            }
+          } catch (error: any) {
+            console.error("Error fetching candidate details:", error);
             toast.error("Error loading candidate details. Please try again.");
           }
         }
@@ -316,12 +317,13 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         <div className="form-row">
           <Labels text={totalExperienceLabel} required={!isInterviewerEditMode} />
           <input
-            type="number"
+            type="text"
             name="TotalExperience"
             value={formData.TotalExperience}
             onChange={handleChange}
             readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.TotalExperience ? "error-input" : ""}
+            placeholder="e.g., 3 Years"
           />
         </div>
         {errors.TotalExperience && (

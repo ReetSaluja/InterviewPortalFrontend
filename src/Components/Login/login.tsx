@@ -284,39 +284,6 @@ const Login = () => {
         {/* FORM SECTION - Contains login form */}
         <section className="form-area">
           <div className="login-card page-column">
-            {/* ROLE SELECTION TABS - Toggle between Admin and Interviewer */}
-            <div className="role-tabs" role="tablist" aria-label="Select role">
-              {/* Admin Tab - Active when activeRole is "Admin" */}
-              <div
-                role="tab"
-                tabIndex={0}
-                aria-selected={activeRole === "Admin"}
-                className={`role-tab ${activeRole === "Admin" ? "active" : ""}`}
-                onClick={() => handleRoleChange("Admin")}
-                onKeyDown={(e) => {
-                  // Keyboard accessibility: Enter or Space activates tab
-                  if (e.key === "Enter" || e.key === " ") handleRoleChange("Admin");
-                }}
-              >
-                Admin
-              </div>
-
-              {/* Interviewer Tab - Active when activeRole is "Interviewer" */}
-              <div
-                role="tab"
-                tabIndex={0}
-                aria-selected={activeRole === "Interviewer"}
-                className={`role-tab ${activeRole === "Interviewer" ? "active" : ""}`}
-                onClick={() => handleRoleChange("Interviewer")}
-                onKeyDown={(e) => {
-                  // Keyboard accessibility: Enter or Space activates tab
-                  if (e.key === "Enter" || e.key === " ") handleRoleChange("Interviewer");
-                }}
-              >
-                Interviewer
-              </div>
-            </div>
-
             {/* LOGIN FORM - Handles form submission */}
             <form onSubmit={handleSubmit} noValidate>
               {/* EMAIL INPUT FIELD */}
