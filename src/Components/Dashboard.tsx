@@ -183,13 +183,15 @@ if(storedUser){
         >
           Import Data
         </button>
-        <button 
-          className="add-candidate-btn"
-          onClick={() => navigate('/add-interview')}
-          type="button"
-        >
-          + Add Candidate
-        </button>
+        {role === "admin" && (
+          <button 
+            className="add-candidate-btn"
+            onClick={() => navigate('/add-interview')}
+            type="button"
+          >
+            + Add Candidate
+          </button>
+        )}
       </div>
       
       {/* AG Grid Table */}
