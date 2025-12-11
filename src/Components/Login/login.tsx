@@ -28,6 +28,7 @@ const Login = () => {
   // React Router hook for programmatic navigation
   const navigate = useNavigate();
 
+
   // Form state management
   const [email, setEmail] = useState<string>("");              // User's email input
   const [password, setPassword] = useState<string>("");         // User's password input
@@ -44,7 +45,6 @@ const Login = () => {
   // Email dropdown state management
   const [emails, setEmails] = useState<string[]>([]);         // List of emails fetched from API
   const [loadingEmails, setLoadingEmails] = useState<boolean>(false); // Loading state for fetching emails
-
   /**
    * Fetches emails from API based on selected role
    * Called when role changes or component mounts
@@ -372,10 +372,13 @@ const Login = () => {
                     Show Password
                   </label>
 
-                  {/* Forgot Password Link - Navigates to password reset page */}
-                  <a href="/forgot-password" className="forgot-link">
-                    Forgot Password?
-                  </a>
+                  {/* Forgot Password Link - Navigates to password reset page*/} 
+                  
+                 <button type="button" className="forgot-link" onClick={() => navigate("/forgot-password")}>
+                  Forgot Password?
+                  </button>
+                  
+
                 </div>
               </div>
 

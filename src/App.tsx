@@ -12,31 +12,27 @@ import Dashboard from './Components/Dashboard';
 
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  // NOTE: isLoggedIn should ideally be managed via React State/Context
-  // to trigger re-renders, but keeping the original structure for now.
+  // If user is not logged in → redirect to Login
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
   }
   return children;
 };
 
-// ... (imports)
-
+// --------------------- APP ROUTES ---------------------
 function App() {
   return (
     <Router>
-      {/* This is the main wrapper. We will use CSS to make its child (the content)
-        grow to fill the space between the Header and the Footer.
-      */}
-      <div className="App-Layout"> 
-        
+      <div className="App-Layout">
+        {/* Common Header */}
         <Header />
-        
+
         <div className="App-Content">
           <Routes>
-            {/* 1. Login route - always accessible */}
+            {/* Login Page */}
             <Route path="/" element={<Login />} />
 
+            {/* Dashboard (Protected) */}
             <Route
               path="/dashboard"
               element={
@@ -48,21 +44,25 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
-            {/* 2. Protected route - requires user to be logged in */}
-            <Route 
-              path="/add-interview" 
+
+            {/* Add Interview Page (Protected) */}
+            <Route
+              path="/add-interview"
               element={
                 <ProtectedRoute>
                   <AddInterview />
                 </ProtectedRoute>
-              } 
+              }
             />
-
-           
+            {/* Forgot Password Page */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify" element={<VerificationPage />} />
+            <Route path="/code" element={<VerificationCode />} />
           </Routes>
+      
         </div>
 
+        {/* Common Footer */}
         <Footer />
       </div>
     </Router>
