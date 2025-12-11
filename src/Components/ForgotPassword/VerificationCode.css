@@ -1,0 +1,190 @@
+/* ------------------------------
+     GLOBAL STYLE
+------------------------------ */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap");
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --text-black: #000000;
+  --text-gray: #6b7280;
+  --input-border: #000000;
+  --btn-black: #000000;
+  --btn-gray: #727272;
+  --page-bg: #ffffff;
+}
+
+/* ------------------------------
+        PAGE LAYOUT
+------------------------------ */
+.vc-page {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--page-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px;
+  font-family: var(--font-sans);
+}
+
+.vc-content {
+  width: 100%;
+  max-width: 920px;
+  padding: 0 65px;
+}
+
+/* ------------------------------
+        TITLE
+------------------------------ */
+.vc-title {
+  font-size: 64px;
+  font-weight: 900;
+  color: var(--text-black);
+  margin: 12px 0 32px;
+  text-align: left;
+}
+
+/* ------------------------------
+           LABELS
+------------------------------ */
+.vc-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 18px 0 8px;
+  color: var(--text-black);
+}
+
+.vc-label-required::after {
+  content: " *";
+  color: red;
+}
+
+/* ------------------------------
+           INPUT FIELDS
+------------------------------ */
+.vc-input,
+.vc-code-input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1.5px solid var(--input-border);
+  background: #ffffff;
+  border-radius: 0;
+  outline: none;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.vc-input-readonly {
+  background: #ffffff;
+  cursor: not-allowed;
+  color: var(--text-black);
+}
+
+.vc-code-field {
+  position: relative;
+}
+
+.vc-code-input:focus {
+  border-color: var(--input-border);
+}
+
+/* Error state */
+.vc-code-field.has-error .vc-code-input {
+  border-color: #cc0000;
+}
+
+.vc-code-field.has-success .vc-code-input {
+  border-color: #16a34a;
+}
+
+.vc-error-text {
+  color: #cc0000;
+  font-size: 14px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+/* ------------------------------
+           BUTTONS
+------------------------------ */
+.vc-button-row-1 {
+  display: flex;
+  gap: 28px;
+  margin-top: 40px;
+}
+
+.vc-button-row-2 {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.vc-btn-black,
+.vc-btn-gray {
+  padding: 16px 36px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  text-transform: uppercase;
+}
+
+.vc-btn-black {
+  background: var(--btn-black);
+  color: #fff;
+}
+
+.vc-btn-gray {
+  background: var(--btn-gray);
+  color: #fff;
+}
+
+.vc-btn-black:hover:not(:disabled),
+.vc-btn-gray:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.vc-btn-black:disabled,
+.vc-btn-gray:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ------------------------------
+           POPUP
+------------------------------ */
+.vc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+.vc-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 320px;
+  padding: 16px 20px;
+  border-radius: 0;
+  border: 1px solid #a7f3d0;
+  background: #ecfdf5;
+  color: #065f46;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.vc-popup-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
