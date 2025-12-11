@@ -7,9 +7,9 @@ import Header from './Components/Header/Header';
 import DashboardHeader from './Components/Header/DashboardHeader';
 import Footer from './Components/Footer/Footer';
 import Dashboard from './Components/Dashboard';
-import ForgotPassword from './Components/ForgotPassword';
-import VerificationPage from './Components/VerificationPage';
-import VerificationCode from './Components/VerificationCode';
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
+import VerificationPage from './Components/ForgotPassword/VerificationPage';
+import VerificationCode from './Components/ForgotPassword/VerificationCode';
 
 
 
