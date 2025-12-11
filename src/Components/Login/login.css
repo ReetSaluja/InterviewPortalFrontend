@@ -236,10 +236,34 @@
 
 /* FORGOT PASSWORD LINK - Blue underlined link */
 .forgot-link {
-  color: var(--accent-blue);
-  text-decoration: underline;
-  font-size: 14px;
-  font-weight: 500;
+  color: var(--accent-blue) !important;
+  text-decoration: underline !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.forgot-link:hover {
+  border: none !important;
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.forgot-link:focus,
+.forgot-link:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* REMEMBER ME (deprecated - kept for reference) */

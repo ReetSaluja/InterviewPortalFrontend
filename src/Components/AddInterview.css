@@ -72,6 +72,17 @@ body {
   box-shadow: 0 0 8px rgba(0, 102, 255, 0.6);  /* Blue glow for focus */
 }
 
+/* Remove focus effects for read-only and disabled fields */
+.form-row input[readonly]:focus,
+.form-row select:disabled:focus,
+.form-row textarea[readonly]:focus {
+  outline: none !important;             /* Remove browser default outline */
+  border: 0.0625rem solid #4A4A4A !important;  /* Keep original border */
+  box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075) !important;  /* Keep original shadow, no blue glow */
+  background-color: #f5f5f5 !important;  /* Maintain gray background */
+  cursor: not-allowed !important;        /* Keep not-allowed cursor */
+}
+
 .required-star {
   color: red;                          /* Red star for required fields */
   margin-left: 4px;                    /* Slight spacing from text */
@@ -79,6 +90,37 @@ body {
 
 .error-input {
   border-color: red !important;        /* For error highlighting */
+}
+
+/* Read-only/disabled fields styling for interviewer edit mode */
+.form-row input[readonly],
+.form-row select:disabled,
+.form-row textarea[readonly] {
+  background-color: #f5f5f5 !important;  /* Light gray background */
+  cursor: not-allowed;                    /* Show not-allowed cursor */
+  color: #666666;                         /* Slightly darker gray text */
+}
+
+/* Prevent hover effects on non-editable fields */
+.form-row input[readonly]:hover,
+.form-row select:disabled:hover,
+.form-row textarea[readonly]:hover {
+  background-color: #f5f5f5 !important;  /* Maintain gray background on hover */
+  cursor: not-allowed !important;         /* Keep not-allowed cursor */
+  border: 0.0625rem solid #4A4A4A !important;  /* Keep original border */
+}
+
+/* Ensure gray background overrides autofill styling */
+.form-row input[readonly]:-webkit-autofill,
+.form-row input[readonly]:-webkit-autofill:hover,
+.form-row input[readonly]:-webkit-autofill:focus,
+.form-row select:disabled:-webkit-autofill,
+.form-row select:disabled:-webkit-autofill:hover,
+.form-row select:disabled:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #f5f5f5 inset !important;
+  box-shadow: 0 0 0px 1000px #f5f5f5 inset !important;
+  background-color: #f5f5f5 !important;
+  -webkit-text-fill-color: #666666 !important;
 }
 
 .error-text {

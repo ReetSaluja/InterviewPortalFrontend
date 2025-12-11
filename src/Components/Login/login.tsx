@@ -28,6 +28,7 @@ const Login = () => {
   // React Router hook for programmatic navigation
   const navigate = useNavigate();
 
+
   // Form state management
   const [email, setEmail] = useState<string>("");              // User's email input
   const [password, setPassword] = useState<string>("");         // User's password input
@@ -44,7 +45,6 @@ const Login = () => {
   // Email dropdown state management
   const [emails, setEmails] = useState<string[]>([]);         // List of emails fetched from API
   const [loadingEmails, setLoadingEmails] = useState<boolean>(false); // Loading state for fetching emails
-
   /**
    * Fetches emails from API based on selected role
    * Called when role changes or component mounts
@@ -284,39 +284,6 @@ const Login = () => {
         {/* FORM SECTION - Contains login form */}
         <section className="form-area">
           <div className="login-card page-column">
-            {/* ROLE SELECTION TABS - Toggle between Admin and Interviewer */}
-            <div className="role-tabs" role="tablist" aria-label="Select role">
-              {/* Admin Tab - Active when activeRole is "Admin" */}
-              <div
-                role="tab"
-                tabIndex={0}
-                aria-selected={activeRole === "Admin"}
-                className={`role-tab ${activeRole === "Admin" ? "active" : ""}`}
-                onClick={() => handleRoleChange("Admin")}
-                onKeyDown={(e) => {
-                  // Keyboard accessibility: Enter or Space activates tab
-                  if (e.key === "Enter" || e.key === " ") handleRoleChange("Admin");
-                }}
-              >
-                Admin
-              </div>
-
-              {/* Interviewer Tab - Active when activeRole is "Interviewer" */}
-              <div
-                role="tab"
-                tabIndex={0}
-                aria-selected={activeRole === "Interviewer"}
-                className={`role-tab ${activeRole === "Interviewer" ? "active" : ""}`}
-                onClick={() => handleRoleChange("Interviewer")}
-                onKeyDown={(e) => {
-                  // Keyboard accessibility: Enter or Space activates tab
-                  if (e.key === "Enter" || e.key === " ") handleRoleChange("Interviewer");
-                }}
-              >
-                Interviewer
-              </div>
-            </div>
-
             {/* LOGIN FORM - Handles form submission */}
             <form onSubmit={handleSubmit} noValidate>
               {/* EMAIL INPUT FIELD */}
@@ -372,10 +339,13 @@ const Login = () => {
                     Show Password
                   </label>
 
-                  {/* Forgot Password Link - Navigates to password reset page */}
-                  <a href="/forgot-password" className="forgot-link">
-                    Forgot Password?
-                  </a>
+                  {/* Forgot Password Link - Navigates to password reset page*/} 
+                  
+                 <button type="button" className="forgot-link" onClick={() => navigate("/forgot-password")}>
+                  Forgot Password?
+                  </button>
+                  
+
                 </div>
               </div>
 
