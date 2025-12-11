@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import "./VerificationCode.css";
 
@@ -151,46 +151,39 @@ const VerificationCode: React.FC = () => {
   };
 
   const handleContinue = () => {
-    navigate("/email-verified", { state: { email } });
+    navigate("/reset-password", { state: { email } });
   };
 
   const handleCancel = () => navigate(-1);
 
   return (
-    <div className="page">
-      <main className="content" role="main" aria-live="polite">
-        <h1 className="page-title">Multi-Factor Authentication</h1>
+    <div className="vc-page">
+      <main className="vc-content" role="main" aria-live="polite">
+        <h1 className="vc-title">Verify your email</h1>
 
-        <p className="lead">
-          A verification code has been sent to your email. Enter the code below.
-        </p>
-
-
-          <div className="email-line">
-            <label className="label">Email Address</label>
-            </div>
-            <div className="email-value">{maskEmail(email)}</div>
-
+        <label className="vc-label">Email Address</label>
+        <input
+          type="text"
+          value={maskEmail(email)}
+          readOnly
+          className="vc-input vc-input-readonly"
+        />
 
         <form
-          className="form"
+          className="vc-form"
           onSubmit={(e) => {
             e.preventDefault();
             handleVerify();
           }}
         >
-          <label htmlFor="code" className="label required">
+          <label htmlFor="code" className="vc-label vc-label-required">
             Code
           </label>
 
-          <div
-            className={`code-field ${
-              hasError ? "has-error" : verified ? "has-success" : ""
-            }`}
-          >
+          <div className={`vc-code-field ${hasError ? "has-error" : verified ? "has-success" : ""}`}>
             <input
               id="code"
-              className="code-input"
+              className="vc-code-input"
               placeholder="Enter Code"
               value={code}
               onChange={(e) => {
@@ -201,19 +194,14 @@ const VerificationCode: React.FC = () => {
               inputMode="numeric"
               disabled={verifying || resending}
             />
-
-            {hasError && <span className="error-icon">!</span>}
-            {verified && !hasError && (
-              <span className="success-icon">✓</span>
-            )}
           </div>
 
-          {hasError && <div className="error-text">{error}</div>}
+          {hasError && <div className="vc-error-text">{error}</div>}
 
-          <div className="button-row">
+          <div className="vc-button-row-1">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="vc-btn-black"
               disabled={!code.trim() || verifying}
             >
               {verifying ? "VERIFYING…" : "VERIFY CODE"}
@@ -221,16 +209,18 @@ const VerificationCode: React.FC = () => {
 
             <button
               type="button"
-              className="btn btn-primary"
+              className="vc-btn-black"
               disabled={resending}
               onClick={handleSendNewCode}
             >
               {resending ? "SENDING…" : "SEND NEW CODE"}
             </button>
+          </div>
 
+          <div className="vc-button-row-2">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="vc-btn-gray"
               disabled={!verified}
               onClick={handleContinue}
             >
@@ -239,7 +229,7 @@ const VerificationCode: React.FC = () => {
 
             <button
               type="button"
-              className="btn btn-secondary"
+              className="vc-btn-black"
               onClick={handleCancel}
             >
               CANCEL

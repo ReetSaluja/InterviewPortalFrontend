@@ -10,6 +10,7 @@ import Dashboard from './Components/Dashboard';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 import VerificationPage from './Components/ForgotPassword/VerificationPage';
 import VerificationCode from './Components/ForgotPassword/VerificationCode';
+import ResetPassword from './Components/ForgotPassword/ResetPassword';
 
 
 
@@ -61,6 +62,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/verify" element={<VerificationPage />} />
             <Route path="/code" element={<VerificationCode />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
       
         </div>

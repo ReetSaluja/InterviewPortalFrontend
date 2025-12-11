@@ -1,198 +1,154 @@
 /* ------------------------------
-     GLOBAL ACCENTURE STYLE
+     GLOBAL STYLE
 ------------------------------ */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap");
 
 :root {
   --font-sans: "Inter", system-ui, sans-serif;
-
   --text-black: #000000;
   --text-gray: #6b7280;
-
-  --input-bg: #e6f0ff;
-  --input-border: #94a3b8;
-
+  --input-border: #000000;
   --btn-black: #000000;
   --btn-gray: #727272;
-
   --page-bg: #ffffff;
 }
 
 /* ------------------------------
         PAGE LAYOUT
 ------------------------------ */
-.page {
-  width: 100vw;
+.vc-page {
+  width: 100%;
   min-height: 100vh;
   background: var(--page-bg);
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 40px;
-  padding-left: 40px;
-  padding-right: 65px;
+  padding-top: 80px;
   font-family: var(--font-sans);
 }
 
-.content {
+.vc-content {
   width: 100%;
   max-width: 920px;
+  padding: 0 65px;
 }
 
 /* ------------------------------
-        TITLE + TEXT
+        TITLE
 ------------------------------ */
-.page-title {
+.vc-title {
   font-size: 64px;
   font-weight: 900;
   color: var(--text-black);
-  margin-bottom: 30px;
-}
-
-.lead {
-  color: var(--text-gray);
-  font-size: 16px;
-  margin-bottom: 30px;
-  padding:0px
-}
-
-.notice {
-  font-size: 14px;
-  padding: 10px 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 25px;
-}
-
-/* ------------------------------
-          EMAIL BLOCK
------------------------------- */
-.email-help {
-  color: var(--text-gray);
-  margin-bottom: 10px;
-}
-
-.email-line {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  align-items: center;
-  margin-bottom:1px;
-  padding:5px;
-
-}
-
-.email-value {
-  padding: 14px;
-  background: var(--input-bg);
-  border: 1.5px solid var(--input-border);
-  font-size: 16px;
-  width:50vw;
+  margin: 12px 0 32px;
+  text-align: left;
 }
 
 /* ------------------------------
            LABELS
 ------------------------------ */
-.label {
+.vc-label {
+  display: block;
   font-size: 16px;
   font-weight: 700;
-  margin-bottom: 6px;
-  padding-top:px;
+  margin: 18px 0 8px;
+  color: var(--text-black);
 }
 
-.required::after {
+.vc-label-required::after {
   content: " *";
   color: red;
 }
 
 /* ------------------------------
-           INPUT FIELD
+           INPUT FIELDS
 ------------------------------ */
-.code-field {
-  position: relative;
-}
-
-.code-input {
-  width: 50vw;
+.vc-input,
+.vc-code-input {
+  width: 100%;
   padding: 14px;
   font-size: 16px;
   border: 1.5px solid var(--input-border);
-  background: var(--input-bg);
+  background: #ffffff;
   border-radius: 0;
   outline: none;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
-.code-input:focus {
-  border-color: #2563eb;
+.vc-input-readonly {
+  background: #ffffff;
+  cursor: not-allowed;
+  color: var(--text-black);
 }
 
-/* error / success indicators */
-.has-error .code-input {
+.vc-code-field {
+  position: relative;
+}
+
+.vc-code-input:focus {
+  border-color: var(--input-border);
+}
+
+/* Error state */
+.vc-code-field.has-error .vc-code-input {
   border-color: #cc0000;
-  background: #ffecec;
 }
 
-.has-success .code-input {
+.vc-code-field.has-success .vc-code-input {
   border-color: #16a34a;
-  background: #ebfef3;
 }
 
-.error-icon,
-.success-icon {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.error-icon {
-  color: #cc0000;
-}
-
-.success-icon {
-  color: #16a34a;
-}
-
-.error-text {
+.vc-error-text {
   color: #cc0000;
   font-size: 14px;
   margin-top: 6px;
-  border: 1px solid #ffb3b3;
-  padding: 10px;
-  background: #ffecec;
+  margin-bottom: 10px;
 }
 
 /* ------------------------------
            BUTTONS
 ------------------------------ */
-.button-row {
-  margin-top: 40px;
+.vc-button-row-1 {
   display: flex;
   gap: 28px;
-  flex-wrap: wrap;
+  margin-top: 40px;
 }
 
-.btn {
+.vc-button-row-2 {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.vc-btn-black,
+.vc-btn-gray {
   padding: 16px 36px;
   font-size: 16px;
   font-weight: 700;
   border: none;
   cursor: pointer;
   border-radius: 0;
+  text-transform: uppercase;
 }
 
-.btn-primary {
+.vc-btn-black {
   background: var(--btn-black);
   color: #fff;
 }
 
-.btn-secondary {
+.vc-btn-gray {
   background: var(--btn-gray);
   color: #fff;
 }
 
-.btn:disabled {
+.vc-btn-black:hover:not(:disabled),
+.vc-btn-gray:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.vc-btn-black:disabled,
+.vc-btn-gray:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

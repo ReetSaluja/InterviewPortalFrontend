@@ -59,34 +59,66 @@
   margin-bottom: 10px;
 }
 
+/* Read-only input - white background */
+.vp-input-readonly {
+  background: #ffffff;
+  cursor: not-allowed;
+  color: var(--text-black);
+  border: 1.5px solid var(--text-black);
+}
+
+/* Code input - white background */
+.vp-input:not(.vp-input-readonly) {
+  background: #ffffff;
+  border: 1.5px solid var(--text-black);
+}
+
 .input-box:focus,
 .vp-input:focus {
   border-color: var(--pill-active);
 }
 
-.input-error {
+.input-error,
+.vp-input-error {
   border-color: #cc0000 !important;
 }
 
+.vp-input-success {
+  border-color: #16a34a !important;
+}
+
+.vp-label-required::after {
+  content: " *";
+  color: red;
+}
+
 /* ---------- ERROR TEXT ---------- */
-.error-text {
+.error-text,
+.vp-error-text {
   margin-top: 6px;
   color: #cc0000;
   font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ---------- STATUS MESSAGE ---------- */
+.vp-status {
+  margin-top: 10px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 /* ---------- BUTTON ROWS ---------- */
-.vp-btn-row,
-.vp-btn-row-2 {
-  display: flex;
-  gap: 28px; /* space between buttons */
-}
-
 .vp-btn-row {
+  display: flex;
+  gap: 28px;
   margin-top: 40px; /* space above first button row */
 }
 
 .vp-btn-row-2 {
+  display: flex;
+  gap: 28px; /* space between CONTINUE and CANCEL buttons */
   margin-top: 20px; /* space above continue/cancel row */
 }
 
@@ -99,6 +131,8 @@
   border: none;
   cursor: pointer;
   border-radius: 0;
+  flex: 1; /* Make all buttons equal width */
+  min-width: 0; /* Allow flex to work properly */
 }
 
 .vp-btn-black {
@@ -111,9 +145,15 @@
   color: #fff;
 }
 
-.vp-btn-black:hover,
-.vp-btn-gray:hover {
+.vp-btn-black:hover:not(:disabled),
+.vp-btn-gray:hover:not(:disabled) {
   opacity: 0.9;
+}
+
+.vp-btn-black:disabled,
+.vp-btn-gray:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ---------- OPTIONAL LOGO STYLE ---------- */
