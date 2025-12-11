@@ -169,7 +169,7 @@ body {
 }
 
 .existing-resume {
-  margin-left: 315px;
+  margin-left: 320px;
   display: block;
   color:red;
   margin-top: 5px;
@@ -245,13 +245,6 @@ body {
   }
 }
 
-.existing-resume {
-  margin-left: 40px;
-  display: block;
-  color:red;
-  margin-top: 5px;
-
-}
 
 
 /*  OVERRIDE CHROME AUTOFILL BLUE */
