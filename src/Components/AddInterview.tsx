@@ -32,7 +32,7 @@ interface InterviewFormData {
   Remarks: string;
   ClientName:string;
   ClientManagerName:string;
-  Resume:File|null; /*Resume is either a File object or null (no file selected)*/
+  Resume:File|null;
   ResumePath:string
 }
 
@@ -46,7 +46,7 @@ interface Interviewers {
 }
 
 
- /*keyof InterviewFormData → keys like "CandidateName", "TotalExperience", etc.Record<key, string> → object mapping each field to an error message.*/
+ /*Errors object can contain some fields (not all).Each field holds a string (the error message) */
 type InterviewFormErrors = Partial<Record<keyof InterviewFormData, string>>;
 
 
@@ -70,8 +70,16 @@ function AddInterview() {
   }
 
   const navigate=useNavigate();
-  const location = useLocation(); /*to access state passed via navigation */
+  const location = useLocation();
   const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/* interviewers list -initially an empty array*/
+  
+  // Check if we're in edit mode
+  const editCandidate = location.state?.candidate;
+  const isEditMode = location.state?.isEdit && editCandidate;
+  const editMode = location.state?.editMode; // "admin" or "interviewer"
+  const candidateId = editCandidate?.id;
+  const isInterviewerEditMode = isEditMode && editMode === "interviewer";
+
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
       try {
@@ -84,58 +92,51 @@ function AddInterview() {
     LoadInterviewers();
   }, []);/*empty dependency array means this effect runs only once when the component loads*/
 
-  
-  
-  
-  // Check if we're in edit mode
-  const editCandidate = location.state?.candidate; /*Looks in location.state for a candidate property.If there is one, we’re in edit mode*/
-  const isEditMode = location.state?.isEdit && editCandidate;/*true if editing an existing candidate*/
-  const editMode = location.state?.editMode; // "admin" or "interviewer"
-  const candidateId = editCandidate?.id; /*If there’s an editCandidate, get its id. Otherwise undefined*/
-  const isInterviewerEditMode = isEditMode && editMode === "interviewer";
-
   // Fetch full candidate details if in edit mode
   useEffect(() => {
     const fetchCandidateDetails = async () => {
       if (isEditMode && candidateId) {
-        // Use the data passed from Dashboard (since single candidate endpoint returns 405)
-        if (editCandidate) {
+        try {
+          // Fetch full candidate details including InterviewerId and ClientName
+          const response = await axios.get(`http://127.0.0.1:8000/candidates/${candidateId}`);
+          const candidate = response.data;
+          
+          // Populate form with candidate data
           setFormData({
-            CandidateName: editCandidate.CandidateName || "",
-            TotalExperience: editCandidate.TotalExperience || "",
-            SkillSet: editCandidate.SkillSet || "",
-            CurrentOrganization: editCandidate.CurrentOrganization || "",
-            NoticePeriod: editCandidate.NoticePeriod || "",
-            Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
-            Feedback: editCandidate.Feedback || "",
-            Remarks: editCandidate.Remarks || "",
-            ClientName: editCandidate.ClientName || "",
-            ClientManagerName: editCandidate.ClientManagerName || "",
+            CandidateName: candidate.CandidateName || "",
+            TotalExperience: candidate.TotalExperience || "",
+            SkillSet: candidate.SkillSet || "",
+            CurrentOrganization: candidate.CurrentOrganization || "",
+            NoticePeriod: candidate.NoticePeriod || "",
+            Interviewer: candidate.InterviewerId?.toString() || candidate.Interviewer || "",
+            Feedback: candidate.Feedback || "",
+            Remarks: candidate.Remarks || "",
+            ClientName: candidate.ClientName || "",
+            ClientManagerName: candidate.ClientManagerName || "",
+            Resume:null,
+            ResumePath:candidate.ResumePath||"",
           });
-        } else {
-          // If no fallback data, try fetching from API
-          try {
-            // Try fetching all candidates and find the one we need
-            const response = await axios.get(`http://127.0.0.1:8000/candidates/`);
-            const candidates = Array.isArray(response.data) ? response.data : [];
-            const candidate = candidates.find((c: any) => c.id === candidateId);
-            
-            if (candidate) {
-              setFormData({
-                CandidateName: candidate.CandidateName || candidate.candidateName || "",
-                TotalExperience: candidate.TotalExperience || candidate.totalExperience || "",
-                SkillSet: candidate.SkillSet || candidate.skillSet || "",
-                CurrentOrganization: candidate.CurrentOrganization || candidate.currentOrganization || "",
-                NoticePeriod: candidate.NoticePeriod || candidate.noticePeriod || "",
-                Interviewer: candidate.InterviewerId?.toString() || candidate.interviewerId?.toString() || candidate.Interviewer || candidate.interviewer || "",
-                Feedback: candidate.Feedback || candidate.feedback || "",
-                Remarks: candidate.Remarks || candidate.remarks || "",
-                ClientName: candidate.ClientName || candidate.clientName || "",
-                ClientManagerName: candidate.ClientManagerName || candidate.clientManagerName || "",
-              });
-            }
-          } catch (error: any) {
-            console.error("Error fetching candidate details:", error);
+        } catch (error: any) {
+          console.error("Error fetching candidate details:", error);
+          // If GET fails, try using the data passed from Dashboard as fallback
+          if (editCandidate) {
+            setFormData({
+              CandidateName: editCandidate.CandidateName || "",
+              TotalExperience: editCandidate.TotalExperience || "",
+              SkillSet: editCandidate.SkillSet || "",
+              CurrentOrganization: editCandidate.CurrentOrganization || "",
+              NoticePeriod: editCandidate.NoticePeriod || "",
+              Interviewer: editCandidate.InterviewerId?.toString() || editCandidate.Interviewer || "",
+              Feedback: editCandidate.Feedback || "",
+              Remarks: editCandidate.Remarks || "",
+              ClientName: editCandidate.ClientName || "",
+              ClientManagerName: editCandidate.ClientManagerName || "",
+              Resume:null,
+              ResumePath:editCandidate.ResumePath||"",
+            });
+          }
+          // Only show error if we don't have fallback data
+          if (!editCandidate) {
             toast.error("Error loading candidate details. Please try again.");
           }
         }
@@ -143,11 +144,9 @@ function AddInterview() {
     };
     
     fetchCandidateDetails();
-  }, [isEditMode, candidateId, editCandidate]);/*uns whenever those three values change (usually once when page opens). */
+  }, [isEditMode, candidateId, editCandidate]);
 
-
-
-  // form data state
+  // ------------ form data ------------
   const [formData, setFormData] = useState<InterviewFormData>({
     CandidateName: "",
     TotalExperience: "",
@@ -165,9 +164,7 @@ function AddInterview() {
 
   });
 
-
-
-  // errors 
+  // ------------ errors ------------
   const [errors, setErrors] = useState<InterviewFormErrors>({});
 
   const handleChange = (
@@ -175,11 +172,11 @@ function AddInterview() {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = event.target; /* e.target is the input element,extract name anf value from the event target*/
+    const { name, value } = event.target; /*extract name anf value from the event target*/
 
     setFormData((prev) => ({
-      ...prev,         /*React keeps the old values using: ...prev*/
-      [name]: value,   /*Update [name] with value. */
+      ...prev, /*React keeps the old values using: ...prev*/
+      [name]: value,
     }));
 
     setErrors((prev) => ({
@@ -188,12 +185,12 @@ function AddInterview() {
     }));
   };
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files && e.target.files[0] ? e.target.files[0] : null; /*“If files exists AND the first file exists, use that file.Otherwise, use null.” */
+  const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
 
   setFormData((prev) => ({
     ...prev,
     Resume: file,
-    ResumePath:""    /*Clears ResumePath so the old stored resume name disappears. */
+    ResumePath:""
   }));
 
   setErrors((prev) => ({
@@ -263,7 +260,7 @@ function AddInterview() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; /*f any errors were added:Update errors state.return; → stop here, do not call backend. */
+      return;
     }
 
     try {
@@ -289,7 +286,7 @@ function AddInterview() {
         toast.success(isInterviewerEditMode ? "Feedback Updated Successfully" : "Candidate Updated Successfully");
       } else {
         // Create new candidate using POST
-        const submitDta=new FormData();  /*We build a FormData object to upload both text fields and file. */
+        const submitDta=new FormData();
         submitDta.append("CandidateName",formData.CandidateName);
         submitDta.append("TotalExperience",formData.TotalExperience);
         submitDta.append("SkillSet",formData.SkillSet);
@@ -300,7 +297,7 @@ function AddInterview() {
         submitDta.append("ClientManagerName",formData.ClientManagerName);
 
 
-        if(formData.Interviewer){  
+        if(formData.Interviewer){
           submitDta.append("InterviewerId",formData.Interviewer);
         }
          
@@ -365,9 +362,6 @@ function AddInterview() {
           ? "Edit Candidate" 
           : "Add Candidate"}
       </h1>
-
-
-
       <form className="form-box" onSubmit={handleSave}>
         
         {/* Candidate Name */}
@@ -385,29 +379,21 @@ function AddInterview() {
           <p className="error-text">{errors.CandidateName}</p>
         )}
 
-
-
-
         {/* Total Experience */}
         <div className="form-row">
           <Labels text={totalExperienceLabel} required={!isInterviewerEditMode} />
           <input
-            type="text"
+            type="number"
             name="TotalExperience"
             value={formData.TotalExperience}
             onChange={handleChange}
             readOnly={role === "interviewer" || isInterviewerEditMode}
             className={errors.TotalExperience ? "error-input" : ""}
-            placeholder="e.g., 3 Years"
           />
         </div>
         {errors.TotalExperience && (
           <p className="error-text">{errors.TotalExperience}</p>
         )}
-
-
-
-
 
         {/* Skill Set */}
         <div className="form-row">
@@ -421,10 +407,6 @@ function AddInterview() {
           />
         </div>
         {errors.SkillSet && <p className="error-text">{errors.SkillSet}</p>}
-
-
-
-
 
         {/* Current Org */}
         <div className="form-row">
@@ -440,10 +422,6 @@ function AddInterview() {
         {errors.CurrentOrganization && (
           <p className="error-text">{errors.CurrentOrganization}</p>
         )}
-
-
-
-
 
         {/* Notice Period */}
         <div className="form-row">
@@ -468,10 +446,6 @@ function AddInterview() {
         {errors.NoticePeriod && (
           <p className="error-text">{errors.NoticePeriod}</p>
         )}
-
-
-
-
 
         {/* Interviewer dropdown (ONLY admin, hidden when interviewer is editing) */}
         {role === "admin" && !isInterviewerEditMode && (
@@ -500,12 +474,10 @@ function AddInterview() {
           </>
         )}
 
-        
 
 
-
-    {role === "admin" && !isInterviewerEditMode && (
-    <>
+       {role === "admin" && !isInterviewerEditMode && (
+  <>
     <div className="form-row">
       <Labels text={ResumeLabel} required />
       <input
@@ -528,7 +500,11 @@ function AddInterview() {
   );
 })()}
 
-{errors.Resume && (
+
+
+   
+
+    {errors.Resume && (
       <p className="error-text">{errors.Resume}</p>
     )}
   </>

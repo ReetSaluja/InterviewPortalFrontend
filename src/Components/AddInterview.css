@@ -245,6 +245,15 @@ body {
   }
 }
 
+.existing-resume {
+  margin-left: 40px;
+  display: block;
+  color:red;
+  margin-top: 5px;
+
+}
+
+
 /*  OVERRIDE CHROME AUTOFILL BLUE */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
