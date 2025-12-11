@@ -168,6 +168,16 @@ body {
     margin-left: 70px;
 }
 
+.existing-resume {
+  margin-left: 315px;
+  display: block;
+  color:red;
+  margin-top: 5px;
+
+}
+
+
+
 /* 
    MOBILE RESPONSIVE
 */

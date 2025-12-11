@@ -11,11 +11,13 @@ import Labels, {
   RemarksLable,
   ClientManagerNameLabel,
   ClientNameLabel,
+  ResumeLabel
 } from "./Constants";
 import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { BsNutFill } from "react-icons/bs";
 
 
 
@@ -30,6 +32,8 @@ interface InterviewFormData {
   Remarks: string;
   ClientName:string;
   ClientManagerName:string;
+  Resume:File|null; /*Resume is either a File object or null (no file selected)*/
+  ResumePath:string
 }
 
 
@@ -38,16 +42,19 @@ interface Interviewers {
   id: number;
   InterviewerName: string;
   PrimarySkill: string;
-  Proficiency: number;
+  Proficiency: string;
 }
 
 
- /*Errors object can contain some fields (not all).Each field holds a string (the error message) */
+ /*keyof InterviewFormData → keys like "CandidateName", "TotalExperience", etc.Record<key, string> → object mapping each field to an error message.*/
 type InterviewFormErrors = Partial<Record<keyof InterviewFormData, string>>;
 
 
 
-function AddInterview() { /*at the moment we declare the variable role TypeScript has NO IDEA yet:whether the user is logged in ,So if we remove null, TypeScript will throw an erro*/
+function AddInterview() { 
+ 
+ 
+  /*at the moment we declare the variable role TypeScript has NO IDEA yet:whether the user is logged in ,So if we remove null, TypeScript will throw an erro*/
   let role: "admin" | "interviewer" | null = null; 
   const storedUser = sessionStorage.getItem("user");
   if (storedUser) {
@@ -63,16 +70,8 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
   }
 
   const navigate=useNavigate();
-  const location = useLocation();
+  const location = useLocation(); /*to access state passed via navigation */
   const [interviewers, setInterviewers] = useState<Interviewers[]>([]);/* interviewers list -initially an empty array*/
-  
-  // Check if we're in edit mode
-  const editCandidate = location.state?.candidate;
-  const isEditMode = location.state?.isEdit && editCandidate;
-  const editMode = location.state?.editMode; // "admin" or "interviewer"
-  const candidateId = editCandidate?.id;
-  const isInterviewerEditMode = isEditMode && editMode === "interviewer";
-
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
       try {
@@ -84,6 +83,16 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     };
     LoadInterviewers();
   }, []);/*empty dependency array means this effect runs only once when the component loads*/
+
+  
+  
+  
+  // Check if we're in edit mode
+  const editCandidate = location.state?.candidate; /*Looks in location.state for a candidate property.If there is one, we’re in edit mode*/
+  const isEditMode = location.state?.isEdit && editCandidate;/*true if editing an existing candidate*/
+  const editMode = location.state?.editMode; // "admin" or "interviewer"
+  const candidateId = editCandidate?.id; /*If there’s an editCandidate, get its id. Otherwise undefined*/
+  const isInterviewerEditMode = isEditMode && editMode === "interviewer";
 
   // Fetch full candidate details if in edit mode
   useEffect(() => {
@@ -134,9 +143,11 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     };
     
     fetchCandidateDetails();
-  }, [isEditMode, candidateId, editCandidate]);
+  }, [isEditMode, candidateId, editCandidate]);/*uns whenever those three values change (usually once when page opens). */
 
-  // ------------ form data ------------
+
+
+  // form data state
   const [formData, setFormData] = useState<InterviewFormData>({
     CandidateName: "",
     TotalExperience: "",
@@ -148,11 +159,15 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
     Remarks: "",
     ClientName:"",
     ClientManagerName:"",
+    Resume:null,
+    ResumePath:""
 
 
   });
 
-  // ------------ errors ------------
+
+
+  // errors 
   const [errors, setErrors] = useState<InterviewFormErrors>({});
 
   const handleChange = (
@@ -160,11 +175,11 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = event.target; /*extract name anf value from the event target*/
+    const { name, value } = event.target; /* e.target is the input element,extract name anf value from the event target*/
 
     setFormData((prev) => ({
-      ...prev, /*React keeps the old values using: ...prev*/
-      [name]: value,
+      ...prev,         /*React keeps the old values using: ...prev*/
+      [name]: value,   /*Update [name] with value. */
     }));
 
     setErrors((prev) => ({
@@ -172,6 +187,22 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
       [name]: "", /*clear the error message for this field*/
     }));
   };
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files && e.target.files[0] ? e.target.files[0] : null; /*“If files exists AND the first file exists, use that file.Otherwise, use null.” */
+
+  setFormData((prev) => ({
+    ...prev,
+    Resume: file,
+    ResumePath:""    /*Clears ResumePath so the old stored resume name disappears. */
+  }));
+
+  setErrors((prev) => ({
+    ...prev,
+    Resume: "",
+  }));
+};
+
+
 
   const handleSave = async (event: React.FormEvent) => {
     event.preventDefault(); /*Stops the browser from doing its default form submission (page reload)*/
@@ -215,7 +246,10 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
       if(!formData.ClientManagerName.trim()){
         newErrors.ClientManagerName="Please Enter Client Manager Name";
       }
-
+      if(!isEditMode && !formData.Resume){
+        newErrors.Resume="Please Upload Resume";
+      }
+      
       if (role === "interviewer") {
         if (!formData.Feedback.trim()) {
           newErrors.Feedback = "Please Select Feedback";
@@ -223,12 +257,13 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         if (!formData.Remarks.trim()) {
           newErrors.Remarks = "Please Enter Remarks";
         }
+      
       }
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return;
+      return; /*f any errors were added:Update errors state.return; → stop here, do not call backend. */
     }
 
     try {
@@ -254,8 +289,40 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         toast.success(isInterviewerEditMode ? "Feedback Updated Successfully" : "Candidate Updated Successfully");
       } else {
         // Create new candidate using POST
-        await axios.post("http://127.0.0.1:8000/candidates/", payload);
-        toast.success("Form Submitted");
+        const submitDta=new FormData();  /*We build a FormData object to upload both text fields and file. */
+        submitDta.append("CandidateName",formData.CandidateName);
+        submitDta.append("TotalExperience",formData.TotalExperience);
+        submitDta.append("SkillSet",formData.SkillSet);
+        submitDta.append("CurrentOrganization",formData.CurrentOrganization);
+        submitDta.append("NoticePeriod",formData.NoticePeriod);
+        submitDta.append("InterviewerId",formData.Interviewer);
+        submitDta.append("ClientName",formData.ClientName);
+        submitDta.append("ClientManagerName",formData.ClientManagerName);
+
+
+        if(formData.Interviewer){  
+          submitDta.append("InterviewerId",formData.Interviewer);
+        }
+         
+        if(formData.Feedback){
+          submitDta.append("Feedback",formData.Feedback); 
+
+        }
+        if(formData.Remarks){
+          submitDta.append("Remarks",formData.Remarks);
+        }
+        if(formData.Resume){
+          submitDta.append("resume",formData.Resume,formData.Resume.name);
+        }
+
+
+
+
+
+        await axios.post("http://127.0.0.1:8000/candidates/", submitDta,{
+        headers:{"Content-Type":"multipart/form-data"},
+       });
+         toast.success("Form Submitted");
       }
 
       
@@ -275,6 +342,8 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
           Remarks: "",
           ClientName:"",
           ClientManagerName:"",
+          Resume:null,
+          ResumePath:""
         });
       }
       setErrors({});
@@ -296,6 +365,9 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
           ? "Edit Candidate" 
           : "Add Candidate"}
       </h1>
+
+
+
       <form className="form-box" onSubmit={handleSave}>
         
         {/* Candidate Name */}
@@ -312,6 +384,9 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         {errors.CandidateName && (
           <p className="error-text">{errors.CandidateName}</p>
         )}
+
+
+
 
         {/* Total Experience */}
         <div className="form-row">
@@ -330,6 +405,10 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
           <p className="error-text">{errors.TotalExperience}</p>
         )}
 
+
+
+
+
         {/* Skill Set */}
         <div className="form-row">
           <Labels text={skillSetLabel} required={!isInterviewerEditMode} />
@@ -342,6 +421,10 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
           />
         </div>
         {errors.SkillSet && <p className="error-text">{errors.SkillSet}</p>}
+
+
+
+
 
         {/* Current Org */}
         <div className="form-row">
@@ -357,6 +440,10 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         {errors.CurrentOrganization && (
           <p className="error-text">{errors.CurrentOrganization}</p>
         )}
+
+
+
+
 
         {/* Notice Period */}
         <div className="form-row">
@@ -381,6 +468,10 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
         {errors.NoticePeriod && (
           <p className="error-text">{errors.NoticePeriod}</p>
         )}
+
+
+
+
 
         {/* Interviewer dropdown (ONLY admin, hidden when interviewer is editing) */}
         {role === "admin" && !isInterviewerEditMode && (
@@ -408,6 +499,41 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
             )}
           </>
         )}
+
+        
+
+
+
+    {role === "admin" && !isInterviewerEditMode && (
+    <>
+    <div className="form-row">
+      <Labels text={ResumeLabel} required />
+      <input
+        type="file"
+        accept=".pdf,.doc,.docx,.ppt,.pptx"
+        onChange={handleResumeChange}
+        className={errors.Resume ? "error-input" : ""}
+      />
+    </div>
+
+    {/* Show existing resume name only when editing AND when a path exists */}
+   {isEditMode && formData.ResumePath && (() => {
+  const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
+  const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
+
+  return (
+    <a href={fileUrl} className="existing-resume">
+      {normalizedPath.split("/").pop()}
+    </a>
+  );
+})()}
+
+{errors.Resume && (
+      <p className="error-text">{errors.Resume}</p>
+    )}
+  </>
+)}
+
 
 
 
@@ -485,6 +611,8 @@ function AddInterview() { /*at the moment we declare the variable role TypeScrip
             )}
           </>
         )}
+
+
 
         {/* BUTTONS */}
         <div className="btn-box">
