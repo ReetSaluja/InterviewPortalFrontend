@@ -23,7 +23,7 @@ interface Candidate {
   Feedback?: string;
   Remarks?: string;
   InterviewerId?: number;
-  Interviewer?: string;
+  InterviewerName?: string;
   ClientName?: string;
   ClientManagerName?: string;
   ResumePath?: string;
@@ -58,6 +58,20 @@ function Dashboard() {
   const [importing, setImporting] = useState(false);  /* importing loader state (disable button + show "Importing...") */
   
 
+  // Edit button cell renderer
+  const EditButtonRenderer = useCallback((params: ICellRendererParams<Candidate>) => {
+    const handleEdit = () => {
+      if ((role === "admin" || role === "interviewer") && params.data) {
+        // Navigate to AddInterview page with candidate data for editing
+        navigate('/add-interview', { 
+          state: { 
+            candidate: params.data,
+            isEdit: true,
+            editMode: role === "interviewer" ? "interviewer" : "admin"
+          } 
+        });
+      }
+    };
 
   const handleImportClick = () => { /*click handler that opens the hidden file selector */
     fileInputRef.current?.click(); // triggers hidden <input type="file">
@@ -156,6 +170,30 @@ function Dashboard() {
       { headerName: "Interviewer", field: "Interviewer", flex: 1, minWidth: 150, sortable: true, filter: true },
       { headerName: "Client Name", field: "ClientName", flex: 1, minWidth: 150, sortable: true, filter: true },
       { headerName: "Client Manager", field: "ClientManagerName", flex: 1, minWidth: 150, sortable: true, filter: true },
+      { 
+        headerName: 'Interviewer', 
+        field: 'InterviewerName', 
+        flex: 1,
+        minWidth: 150,
+        sortable: true,
+        filter: true,
+      },
+      { 
+        headerName: 'Client Name', 
+        field: 'ClientName', 
+        flex: 1,
+        minWidth: 150,
+        sortable: true,
+        filter: true,
+      },
+      { 
+        headerName: 'Client Manager', 
+        field: 'ClientManagerName', 
+        flex: 1,
+        minWidth: 150,
+        sortable: true,
+        filter: true,
+      },
     ];
 
     const feedbackColumns: ColDef<Candidate>[] = [
