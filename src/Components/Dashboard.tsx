@@ -20,9 +20,10 @@ interface Candidate {
   Feedback?: string;
   Remarks?: string;
   InterviewerId?: number;
-  Interviewer?: string;
+  InterviewerName?: string;
   ClientName?: string;
   ClientManagerName?: string;
+  ResumePath?: string;
 }
 
 
@@ -61,7 +62,7 @@ if(storedUser){
           state: { 
             candidate: params.data,
             isEdit: true,
-            editMode: role === "interviewer" ? "interviewer" : "admin" // Track edit mode
+            editMode: role === "interviewer" ? "interviewer" : "admin"
           } 
         });
       }
@@ -143,7 +144,7 @@ if(storedUser){
     const adminOnlyColumns: ColDef<Candidate>[] = [
       { 
         headerName: 'Interviewer', 
-        field: 'Interviewer', 
+        field: 'InterviewerName', 
         flex: 1,
         minWidth: 150,
         sortable: true,
