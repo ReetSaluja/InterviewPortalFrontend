@@ -55,18 +55,27 @@ function Dashboard() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  /* Search state */
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+
   /* ref for hidden file input inside export button (Excel upload) */
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /* importing loader state (disable button + show "Importing...") */
   const [importing, setImporting] = useState(false);
 
-  // Fetch candidates data with pagination
-  const fetchCandidates = useCallback(async (skip: number, limit: number) => {
+  // Fetch candidates data with pagination and search
+  const fetchCandidates = useCallback(async (skip: number, limit: number, search?: string) => {
     try {
       setLoading(true);
+      const params: { skip: number; limit: number; search?: string } = { skip, limit };
+      if (search && search.trim()) {
+        params.search = search.trim();
+      }
+      
       const response = await axios.get("http://127.0.0.1:8000/candidates/paginated", {
-        params: { skip, limit },
+        params,
       });
 
       const { candidates: candidatesData, totalcount } = response.data;
@@ -114,7 +123,7 @@ function Dashboard() {
       }));
 
       await axios.post("http://127.0.0.1:8000/candidates/import", payload);
-      await fetchCandidates(currentPage * pageSize, pageSize); // Refresh grid after import
+      await fetchCandidates(currentPage * pageSize, pageSize, searchTerm); // Refresh grid after import
       toast.success("Candidates imported successfully");
     } catch (err) {
       console.error(err);
@@ -237,11 +246,31 @@ function Dashboard() {
     []
   );
 
-  // Fetch paginated data when page or pageSize changes
+  // Fetch paginated data when page, pageSize, or searchTerm changes
   useEffect(() => {
     const skip = currentPage * pageSize;
-    fetchCandidates(skip, pageSize);
-  }, [currentPage, pageSize, fetchCandidates]);
+    fetchCandidates(skip, pageSize, searchTerm);
+  }, [currentPage, pageSize, searchTerm, fetchCandidates]);
+
+  // Handle search
+  const handleSearch = () => {
+    setCurrentPage(0); // Reset to first page when searching
+    setSearchTerm(searchInput);
+  };
+
+  // Handle search on Enter key
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchInput("");
+    setSearchTerm("");
+    setCurrentPage(0);
+  };
 
   // Auto-size columns on grid ready
   const onGridReady = useCallback((params: GridReadyEvent) => {
@@ -265,28 +294,51 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {/* Dashboard Actions */}
-      <div className="dashboard-actions">
-        {/* Import button + hidden input */}
-        <button className="import-btn" onClick={handleImportClick} disabled={importing} type="button">
-          {importing ? "Importing..." : "Import Data"}
-        </button>
-
-        {/* hidden input for Excel upload */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept=".xlsx,.xls"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-
-        {/* Add Candidate button */}
-        {role === "admin" && (
-          <button className="add-candidate-btn" onClick={() => navigate("/add-interview")} type="button">
-            + Add Candidate
+      {/* Search and Actions Row */}
+      <div className="dashboard-toolbar">
+        {/* Search Box */}
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Search candidates..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            className="search-input"
+          />
+          <button onClick={handleSearch} className="search-btn" type="button">
+            Search
           </button>
-        )}
+          {searchTerm && (
+            <button onClick={handleClearSearch} className="clear-search-btn" type="button">
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Dashboard Actions */}
+        <div className="dashboard-actions">
+          {/* Import button + hidden input */}
+          <button className="import-btn" onClick={handleImportClick} disabled={importing} type="button">
+            {importing ? "Importing..." : "Import Data"}
+          </button>
+
+          {/* hidden input for Excel upload */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".xlsx,.xls"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+
+          {/* Add Candidate button */}
+          {role === "admin" && (
+            <button className="add-candidate-btn" onClick={() => navigate("/add-interview")} type="button">
+              + Add Candidate
+            </button>
+          )}
+        </div>
       </div>
 
       {/* AG Grid Table */}
@@ -299,9 +351,9 @@ function Dashboard() {
           domLayout="autoHeight"
           loading={loading}
           onGridReady={onGridReady}
-          rowSelection="single"
           animateRows={true}
           suppressCellFocus={true}
+          suppressRowClickSelection={true}
           overlayNoRowsTemplate="<span class='ag-overlay-no-rows'>No candidates found. Add some interviews to see them here.</span>"
         />
       </div>

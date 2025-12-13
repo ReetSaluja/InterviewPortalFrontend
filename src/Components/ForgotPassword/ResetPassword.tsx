@@ -9,14 +9,15 @@ const ResetPassword: React.FC = () => {
   // Get email from previous page
   const email = (location.state as { email?: string })?.email ?? "";
 
+  // Form state
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  // Validate password fields
   const validatePassword = () => {
     if (!newPassword.trim()) {
       setError("Please enter a new password");
@@ -36,6 +37,7 @@ const ResetPassword: React.FC = () => {
     return true;
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -71,21 +73,18 @@ const ResetPassword: React.FC = () => {
         return;
       }
 
-      const userData = await response.json();
-      
       // Success - password updated
       setSuccess(true);
       setError("");
-      
+
       // Redirect to login after 2 seconds
       setTimeout(() => {
-        navigate("/", { 
-          state: { 
-            message: "Password updated successfully! Please login with your new password." 
-          } 
+        navigate("/", {
+          state: {
+            message: "Password updated successfully! Please login with your new password.",
+          },
         });
       }, 2000);
-
     } catch (err: any) {
       console.error("Password update error:", err);
       setError(err?.message || "Network error while updating password. Please try again.");
@@ -93,6 +92,7 @@ const ResetPassword: React.FC = () => {
     }
   };
 
+  // Handle cancel button
   const handleCancel = () => {
     navigate("/");
   };
@@ -109,6 +109,7 @@ const ResetPassword: React.FC = () => {
         </div>
       ) : (
         <>
+          {/* Email field (read-only) */}
           <label className="vp-label">Email Address</label>
           <input
             type="email"
@@ -119,6 +120,7 @@ const ResetPassword: React.FC = () => {
           />
 
           <form onSubmit={handleSubmit}>
+            {/* New Password field */}
             <label className="vp-label" htmlFor="newPassword">
               New Password <span style={{ color: "#cc0000" }}>*</span>
             </label>
@@ -138,13 +140,14 @@ const ResetPassword: React.FC = () => {
               />
             </div>
 
+            {/* Confirm Password field */}
             <label className="vp-label" htmlFor="confirmPassword" style={{ marginTop: "20px" }}>
               Confirm Password <span style={{ color: "#cc0000" }}>*</span>
             </label>
             <div style={{ position: "relative" }}>
               <input
                 id="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
@@ -157,6 +160,7 @@ const ResetPassword: React.FC = () => {
               />
             </div>
 
+            {/* Show Password checkbox */}
             <div style={{ marginTop: "10px", marginBottom: "10px" }}>
               <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
                 <input
@@ -168,12 +172,14 @@ const ResetPassword: React.FC = () => {
               </label>
             </div>
 
+            {/* Error message */}
             {error && (
               <p className="error-text" style={{ marginTop: "8px" }}>
                 {error}
               </p>
             )}
 
+            {/* Submit button */}
             <div className="vp-btn-row">
               <button
                 type="submit"
@@ -185,6 +191,7 @@ const ResetPassword: React.FC = () => {
             </div>
           </form>
 
+          {/* Cancel button */}
           <div className="vp-btn-row-2">
             <button
               type="button"
@@ -202,4 +209,3 @@ const ResetPassword: React.FC = () => {
 };
 
 export default ResetPassword;
-

@@ -14,7 +14,6 @@
   align-items: center;
   padding: 24px 40px;
   background: #FFFFFF;
-  border-bottom: 3px solid #A100FF;
 }
 
 /* PAGE TITLE - Accenture Typography */
@@ -35,7 +34,7 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background-color: #A100FF;
+  /* background-color: #A100FF; */
 }
 
 /* RESPONSIVE STYLES - Tablet */
