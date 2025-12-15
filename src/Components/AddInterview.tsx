@@ -79,6 +79,7 @@ function AddInterview() {
   const editMode = location.state?.editMode; // "admin" or "interviewer"
   const candidateId = editCandidate?.id;
   const isInterviewerEditMode = isEditMode && editMode === "interviewer";
+  const returnToPage = location.state?.returnToPage ?? 0; // Page to return to after edit
 
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
@@ -345,8 +346,13 @@ function AddInterview() {
       }
       setErrors({});
       
-      // Navigate back to dashboard after save
-      navigate("/dashboard");
+      // Navigate back to dashboard after save with page info
+      navigate("/dashboard", {
+        state: {
+          returnToPage: isEditMode ? returnToPage : undefined,
+          action: isEditMode ? "edited" : "added",
+        },
+      });
     } catch (err) {
       toast.error(isEditMode ? "Error updating candidate" : "Error saving candidate");
       console.error(err);
@@ -509,6 +515,27 @@ function AddInterview() {
     )}
   </>
 )}
+{isInterviewerEditMode && formData.ResumePath && (() => {
+  const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
+  const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
+  const fileName = normalizedPath.split("/").pop() || "Resume";
+ 
+  return (
+    <div className="form-row">
+      <Labels text="Resume" required={false} />
+      <input
+        type="text"
+        
+        value={fileName}
+        className="resume-input-like"
+        onClick={() => window.open(fileUrl, "_blank", "noopener,noreferrer")}
+        title="Click to open resume"
+      />
+    </div>
+  );
+})()}
+
+ 
 
 
 

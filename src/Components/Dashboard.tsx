@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 import { useMemo, useEffect, useState, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
@@ -47,12 +47,24 @@ function Dashboard() {
   }
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get initial page from location state (for returning from edit)
+  const getInitialPage = (): number => {
+    const state = location.state as { returnToPage?: number; action?: string } | null;
+    if (state?.returnToPage !== undefined) {
+      // Clear the location state to prevent re-triggering on refresh
+      window.history.replaceState({}, document.title);
+      return state.returnToPage;
+    }
+    return 0;
+  };
 
   /* grid + pagination state */
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(getInitialPage);
   const [pageSize, setPageSize] = useState(10);
 
   /* Search state */
@@ -144,6 +156,7 @@ function Dashboard() {
               candidate: params.data,
               isEdit: true,
               editMode: role === "interviewer" ? "interviewer" : "admin",
+              returnToPage: currentPage,
             },
           });
         }
@@ -165,13 +178,25 @@ function Dashboard() {
         </button>
       );
     },
-    [navigate, role]
+    [navigate, role, currentPage]
   );
 
   // Column defs
   const columnDefs = useMemo<ColDef<Candidate>[]>(() => {
     const baseColumns: ColDef<Candidate>[] = [
-      { headerName: "S.No", field: "id", width: 100, minWidth: 80, sortable: true, filter: true },
+      { 
+        headerName: "S.No", 
+        valueGetter: (params) => {
+          if (params.node?.rowIndex !== undefined && params.node?.rowIndex !== null) {
+            return currentPage * pageSize + params.node.rowIndex + 1;
+          }
+          return '';
+        },
+        width: 100, 
+        minWidth: 80, 
+        sortable: false, 
+        filter: false 
+      },
       { headerName: "Candidate Name", field: "CandidateName", flex: 1, minWidth: 150, sortable: true, filter: false },
       { headerName: "Experience", field: "TotalExperience", width: 130, minWidth: 100, sortable: true, filter: true },
       { headerName: "Technology", field: "SkillSet", flex: 1, minWidth: 150, sortable: true, filter: true },
@@ -234,7 +259,7 @@ function Dashboard() {
     } else {
       return baseColumns;
     }
-  }, [EditButtonRenderer, role]);
+  }, [EditButtonRenderer, role, currentPage, pageSize]);
 
   // Default column properties
   const defaultColDef = useMemo<ColDef>(

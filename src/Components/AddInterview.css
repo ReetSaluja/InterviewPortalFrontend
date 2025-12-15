@@ -176,7 +176,14 @@ body {
 
 }
 
+/* Interviewer resume input – force red text */
+.resume-input-like {
+  color: red !important;
+  -webkit-text-fill-color: red !important; /* Chrome fix */
+  cursor: pointer !important;
+}
 
+ 
 
 /* 
    MOBILE RESPONSIVE
