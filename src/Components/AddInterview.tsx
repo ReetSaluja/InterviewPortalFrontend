@@ -367,91 +367,101 @@ function AddInterview() {
         {/* Candidate Name */}
         <div className="form-row">
           <Labels text={candidateNameLabel} required={!isInterviewerEditMode} />
-          <input
-            name="CandidateName"
-            value={formData.CandidateName}
-            onChange={handleChange}
-            readOnly={role === "interviewer" || isInterviewerEditMode}
-            className={errors.CandidateName ? "error-input" : ""}
-          />
+          <div className="input-wrapper">
+            <input
+              name="CandidateName"
+              value={formData.CandidateName}
+              onChange={handleChange}
+              readOnly={role === "interviewer" || isInterviewerEditMode}
+              className={errors.CandidateName ? "error-input" : ""}
+            />
+            {errors.CandidateName && (
+              <p className="error-text">{errors.CandidateName}</p>
+            )}
+          </div>
         </div>
-        {errors.CandidateName && (
-          <p className="error-text">{errors.CandidateName}</p>
-        )}
 
         {/* Total Experience */}
         <div className="form-row">
           <Labels text={totalExperienceLabel} required={!isInterviewerEditMode} />
-          <input
-            type="number"
-            name="TotalExperience"
-            value={formData.TotalExperience}
-            onChange={handleChange}
-            readOnly={role === "interviewer" || isInterviewerEditMode}
-            className={errors.TotalExperience ? "error-input" : ""}
-          />
+          <div className="input-wrapper">
+            <input
+              type="number"
+              name="TotalExperience"
+              value={formData.TotalExperience}
+              onChange={handleChange}
+              readOnly={role === "interviewer" || isInterviewerEditMode}
+              className={errors.TotalExperience ? "error-input" : ""}
+            />
+            {errors.TotalExperience && (
+              <p className="error-text">{errors.TotalExperience}</p>
+            )}
+          </div>
         </div>
-        {errors.TotalExperience && (
-          <p className="error-text">{errors.TotalExperience}</p>
-        )}
 
         {/* Skill Set */}
         <div className="form-row">
           <Labels text={skillSetLabel} required={!isInterviewerEditMode} />
-          <input
-            name="SkillSet"
-            value={formData.SkillSet}
-            onChange={handleChange}
-            readOnly={role === "interviewer" || isInterviewerEditMode}
-            className={errors.SkillSet ? "error-input" : ""}
-          />
+          <div className="input-wrapper">
+            <input
+              name="SkillSet"
+              value={formData.SkillSet}
+              onChange={handleChange}
+              readOnly={role === "interviewer" || isInterviewerEditMode}
+              className={errors.SkillSet ? "error-input" : ""}
+            />
+            {errors.SkillSet && <p className="error-text">{errors.SkillSet}</p>}
+          </div>
         </div>
-        {errors.SkillSet && <p className="error-text">{errors.SkillSet}</p>}
 
         {/* Current Org */}
         <div className="form-row">
           <Labels text={currentOrganizationLabel} required={!isInterviewerEditMode} />
-          <input
-            name="CurrentOrganization"
-            value={formData.CurrentOrganization}
-            onChange={handleChange}
-            readOnly={role === "interviewer" || isInterviewerEditMode}
-            className={errors.CurrentOrganization ? "error-input" : ""}
-          />
+          <div className="input-wrapper">
+            <input
+              name="CurrentOrganization"
+              value={formData.CurrentOrganization}
+              onChange={handleChange}
+              readOnly={role === "interviewer" || isInterviewerEditMode}
+              className={errors.CurrentOrganization ? "error-input" : ""}
+            />
+            {errors.CurrentOrganization && (
+              <p className="error-text">{errors.CurrentOrganization}</p>
+            )}
+          </div>
         </div>
-        {errors.CurrentOrganization && (
-          <p className="error-text">{errors.CurrentOrganization}</p>
-        )}
 
         {/* Notice Period */}
         <div className="form-row">
           <Labels text={noticePeriodLabel} required={!isInterviewerEditMode} />
-          <select
-            name="NoticePeriod"
-            value={formData.NoticePeriod}
-            onChange={handleChange}
-            disabled={role === "interviewer" || isInterviewerEditMode}
-            className={errors.NoticePeriod ? "error-input" : ""}
-          >
-            <option value="" disabled>
-              Select
-            </option>
-            <option value="Immediate">Immediate</option>
-            <option value="15 Days">15 Days</option>
-            <option value="30 Days">30 Days</option>
-            <option value="60 Days">60 Days</option>
-            <option value="90 Days">90 Days</option>
-          </select>
+          <div className="input-wrapper">
+            <select
+              name="NoticePeriod"
+              value={formData.NoticePeriod}
+              onChange={handleChange}
+              disabled={role === "interviewer" || isInterviewerEditMode}
+              className={errors.NoticePeriod ? "error-input" : ""}
+            >
+              <option value="" disabled>
+                Select
+              </option>
+              <option value="Immediate">Immediate</option>
+              <option value="15 Days">15 Days</option>
+              <option value="30 Days">30 Days</option>
+              <option value="60 Days">60 Days</option>
+              <option value="90 Days">90 Days</option>
+            </select>
+            {errors.NoticePeriod && (
+              <p className="error-text">{errors.NoticePeriod}</p>
+            )}
+          </div>
         </div>
-        {errors.NoticePeriod && (
-          <p className="error-text">{errors.NoticePeriod}</p>
-        )}
 
         {/* Interviewer dropdown (ONLY admin, hidden when interviewer is editing) */}
         {role === "admin" && !isInterviewerEditMode && (
-          <>
-            <div className="form-row">
-              <Labels text={InterviewerLabel} required />
+          <div className="form-row">
+            <Labels text={InterviewerLabel} required />
+            <div className="input-wrapper">
               <select
                 name="Interviewer"
                 value={formData.Interviewer}
@@ -467,128 +477,124 @@ function AddInterview() {
                   </option>
                 ))}
               </select>
+              {errors.Interviewer && (
+                <p className="error-text">{errors.Interviewer}</p>
+              )}
             </div>
-            {errors.Interviewer && (
-              <p className="error-text">{errors.Interviewer}</p>
-            )}
-          </>
+          </div>
         )}
 
-
-
        {role === "admin" && !isInterviewerEditMode && (
-  <>
-    <div className="form-row">
-      <Labels text={ResumeLabel} required />
-      <input
-        type="file"
-        accept=".pdf,.doc,.docx,.ppt,.pptx"
-        onChange={handleResumeChange}
-        className={errors.Resume ? "error-input" : ""}
-      />
-    </div>
+          <div className="form-row">
+            <Labels text={ResumeLabel} required />
+            <div className="input-wrapper">
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+                onChange={handleResumeChange}
+                className={errors.Resume ? "error-input" : ""}
+              />
 
-    {/* Show existing resume name only when editing AND when a path exists */}
-   {isEditMode && formData.ResumePath && (() => {
-  const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
-  const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
+              {/* Show existing resume name only when editing AND when a path exists */}
+              {isEditMode && formData.ResumePath && (() => {
+                const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
+                const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
 
-  return (
-    <a href={fileUrl} className="existing-resume">
-      {normalizedPath.split("/").pop()}
-    </a>
-  );
-})()}
+                return (
+                  <a href={fileUrl} className="existing-resume">
+                    {normalizedPath.split("/").pop()}
+                  </a>
+                );
+              })()}
 
-
-
-   
-
-    {errors.Resume && (
-      <p className="error-text">{errors.Resume}</p>
-    )}
-  </>
-)}
-
-
-
+              {errors.Resume && (
+                <p className="error-text">{errors.Resume}</p>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="form-row">
-        <Labels text={ClientNameLabel} required={!isInterviewerEditMode} />
-        <select
-        name="ClientName"
-        value={formData.ClientName}
-        onChange={handleChange}
-        disabled={isInterviewerEditMode}
-        className={errors.ClientName ? "error-input": ""}
-        >
-          <option value="" disabled>Select</option>
-          <option value="Fidelity">Fidelity</option>
-          <option value="Airbus">Airbus</option>
-          <option value="Google">Google</option>
-          <option value="Amazon">Amazon</option>  
-          <option value="Microsoft">Microsoft</option>
-        </select>
+          <Labels text={ClientNameLabel} required={!isInterviewerEditMode} />
+          <div className="input-wrapper">
+            <select
+              name="ClientName"
+              value={formData.ClientName}
+              onChange={handleChange}
+              disabled={isInterviewerEditMode}
+              className={errors.ClientName ? "error-input": ""}
+            >
+              <option value="" disabled>Select</option>
+              <option value="Fidelity">Fidelity</option>
+              <option value="Airbus">Airbus</option>
+              <option value="Google">Google</option>
+              <option value="Amazon">Amazon</option>  
+              <option value="Microsoft">Microsoft</option>
+            </select>
+            {errors.ClientName && (
+              <p className="error-text">{errors.ClientName}</p>
+            )}
+          </div>
         </div>
-        {errors.ClientName && (
-        <p className="error-text">{errors.ClientName}</p>)}
 
         <div className="form-row">
           <Labels text={ClientManagerNameLabel} required={!isInterviewerEditMode} />
-          <input
-            name="ClientManagerName"
-            value={formData.ClientManagerName}
-            onChange={handleChange}
-            readOnly={isInterviewerEditMode}
-            className={errors.ClientManagerName ? "error-input" : ""}
-          />
+          <div className="input-wrapper">
+            <input
+              name="ClientManagerName"
+              value={formData.ClientManagerName}
+              onChange={handleChange}
+              readOnly={isInterviewerEditMode}
+              className={errors.ClientManagerName ? "error-input" : ""}
+            />
+            {errors.ClientManagerName && (
+              <p className="error-text">{errors.ClientManagerName}</p>
+            )}
+          </div>
         </div>
-        {errors.ClientManagerName && (
-          <p className="error-text">{errors.ClientManagerName}</p>
-        )}
       
-
-
         {/* Feedback + Remarks - Always show when interviewer role OR when interviewer is editing */}
         {(role === "interviewer" || isInterviewerEditMode) && (
           <>
             <div className="form-row">
               <Labels text={FeedbackLabel} required />
-              <select
-                name="Feedback"
-                value={formData.Feedback}
-                onChange={handleChange}
-                className={errors.Feedback ? "error-input" : ""}
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                <option value="Selected">Selected</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+              <div className="input-wrapper">
+                <select
+                  name="Feedback"
+                  value={formData.Feedback}
+                  onChange={handleChange}
+                  className={errors.Feedback ? "error-input" : ""}
+                >
+                  <option value="" disabled>
+                    Select
+                  </option>
+                  <option value="Selected">Selected</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                {errors.Feedback && (
+                  <p className="error-text">{errors.Feedback}</p>
+                )}
+              </div>
             </div>
-            {errors.Feedback && (
-              <p className="error-text">{errors.Feedback}</p>
-            )}
 
             <div className="form-row">
               <Labels text={RemarksLable} required />
-              <textarea
-                name="Remarks"
-                value={formData.Remarks}
-                onChange={handleChange}
-                rows={4}
-                cols={80}
-                className={errors.Remarks ? "error-input" : ""}
-              />
+              <div className="input-wrapper">
+                <textarea
+                  name="Remarks"
+                  value={formData.Remarks}
+                  onChange={handleChange}
+                  rows={4}
+                  cols={80}
+                  className={errors.Remarks ? "error-input" : ""}
+                />
+                {errors.Remarks && (
+                  <p className="error-text">{errors.Remarks}</p>
+                )}
+              </div>
             </div>
-            {errors.Remarks && (
-              <p className="error-text">{errors.Remarks}</p>
-            )}
           </>
         )}
-
-
 
         {/* BUTTONS */}
         <div className="btn-box">
