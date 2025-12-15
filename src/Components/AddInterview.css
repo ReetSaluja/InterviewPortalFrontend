@@ -23,7 +23,7 @@ body {
 /* Row: Label + Input */
 .form-row {
   display: flex;                       /* Place label + input on same row */
-  align-items: center;                 /* Vertically center items */
+  align-items: flex-start;             /* Vertically align to top (since wrapper might be taller) */
   gap: 16px;                           /* Space between label and input */
   margin-bottom: 18px;                 /* Space between each row */
 }
@@ -37,6 +37,14 @@ body {
    line-height: 1.000em;               /* Compact line height */
    margin-bottom: 0;                   /* Remove bottom margin */
    width: 75%;                         /* Label width inside flex row */
+   margin-top: 0.8em;                  /* Align with input top */
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 5.15em);          /* Width minus label width */
+  margin: 0.625em 0 0 0;               /* Top margin separating label and field */
 }
 
 .form-row input,
@@ -45,7 +53,7 @@ body {
   display: inline-block;               /* Allow width control */
   box-shadow: inset 0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.075); /* Soft inner shadow */
   padding: .63rem 3.13rem .63rem .94rem; /* Input padding */
-  width: calc(100% - 5.15em);          /* Width minus label width */
+  width: 100%;                         /* Full width of wrapper */
   color: #000000;                      /* Text color */
   vertical-align: middle;              /* Align with label */
   background-color: #FFFFFF;           /* Input background */
@@ -55,7 +63,7 @@ body {
   font-family: "Graphik Regular", "Arial", Sans-Serif; /* Input font */
   font-size: 1rem;                     /* Font size */
   line-height: 1.6em;                  /* Line height */
-  margin: 0.625em 0 0 0;               /* Top margin separating label and field */
+  margin: 0;                           /* Reset margin inside wrapper */
 }
 
 .form-row textarea {
@@ -126,8 +134,9 @@ body {
 .error-text {
   color: red;                          /* Error message text color */
   font-size: 13px;                     /* Smaller text */
-  margin-top: -10px;                   /* Pull text upward */
-  margin-left: 320px;                  /* Align error text under inputs */
+  margin-top: 4px;                     /* Space above error text */
+  margin-left: 0;                      /* Reset left margin */
+  text-align: left;                    /* Left align */
 }
 
 .btn-box {
@@ -169,7 +178,7 @@ body {
 }
 
 .existing-resume {
-  margin-left: 320px;
+  margin-left: 0;
   display: block;
   color:red;
   margin-top: 5px;
@@ -205,6 +214,12 @@ body {
 
   .form-row > :first-child {
     min-width: 0;                      /* Prevent unwanted width on labels */
+    margin-top: 0;                     /* Reset top margin on mobile */
+  }
+
+  .input-wrapper {
+    width: 100%;                       /* Full width on mobile */
+    margin-top: 0;                     /* Reset top margin */
   }
 
   .form-row input,
