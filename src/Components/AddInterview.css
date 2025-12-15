@@ -185,12 +185,14 @@ body {
 
 }
 
-/* Interviewer resume input – force red text */
-.resume-input-like {
+
+/* Override readonly cursor ONLY for resume input */
+.form-row input.resume-input-like[readonly] {
+  cursor: pointer !important;      /* remove 🚫 */
   color: red !important;
-  -webkit-text-fill-color: red !important; /* Chrome fix */
-  cursor: pointer !important;
+  -webkit-text-fill-color: red !important;
 }
+
 
  
 

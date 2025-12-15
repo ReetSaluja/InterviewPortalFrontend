@@ -391,6 +391,7 @@ function AddInterview() {
             <input
               type="number"
               name="TotalExperience"
+              min={0} 
               value={formData.TotalExperience}
               onChange={handleChange}
               readOnly={role === "interviewer" || isInterviewerEditMode}
@@ -530,8 +531,9 @@ function AddInterview() {
           <input
             type="text"
             value={fileName}
+            readOnly
             className="resume-input-like"
-            onClick={() => window.open(fileUrl, "_blank", "noopener,noreferrer")}
+            onClick={() => window.open(fileUrl)}
             title="Click to open resume"
           />
         </div>
