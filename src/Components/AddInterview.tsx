@@ -17,7 +17,6 @@ import "./AddInterview.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { BsNutFill } from "react-icons/bs";
 
 
 
@@ -79,6 +78,26 @@ function AddInterview() {
   const editMode = location.state?.editMode; // "admin" or "interviewer"
   const candidateId = editCandidate?.id;
   const isInterviewerEditMode = isEditMode && editMode === "interviewer";
+  const returnToPage = location.state?.returnToPage ?? 0; // Page to return to after edit
+
+  // ------------ form data ------------
+  const [formData, setFormData] = useState<InterviewFormData>({
+    CandidateName: "",
+    TotalExperience: "",
+    SkillSet: "",
+    CurrentOrganization: "",
+    NoticePeriod: "",
+    Interviewer: "",
+    Feedback: "",
+    Remarks: "",
+    ClientName:"",
+    ClientManagerName:"",
+    Resume:null,
+    ResumePath:""
+  });
+
+  // ------------ errors ------------
+  const [errors, setErrors] = useState<InterviewFormErrors>({});
 
   useEffect(() => {
     const LoadInterviewers = async () => {/*asynchronous (it returns a promise)*/
@@ -116,7 +135,7 @@ function AddInterview() {
             Resume:null,
             ResumePath:candidate.ResumePath||"",
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error("Error fetching candidate details:", error);
           // If GET fails, try using the data passed from Dashboard as fallback
           if (editCandidate) {
@@ -145,27 +164,6 @@ function AddInterview() {
     
     fetchCandidateDetails();
   }, [isEditMode, candidateId, editCandidate]);
-
-  // ------------ form data ------------
-  const [formData, setFormData] = useState<InterviewFormData>({
-    CandidateName: "",
-    TotalExperience: "",
-    SkillSet: "",
-    CurrentOrganization: "",
-    NoticePeriod: "",
-    Interviewer: "",
-    Feedback: "",
-    Remarks: "",
-    ClientName:"",
-    ClientManagerName:"",
-    Resume:null,
-    ResumePath:""
-
-
-  });
-
-  // ------------ errors ------------
-  const [errors, setErrors] = useState<InterviewFormErrors>({});
 
   const handleChange = (
     event: React.ChangeEvent< /*it handles changes from input, select, textarea*/
@@ -345,8 +343,13 @@ function AddInterview() {
       }
       setErrors({});
       
-      // Navigate back to dashboard after save
-      navigate("/dashboard");
+      // Navigate back to dashboard after save with page info
+      navigate("/dashboard", {
+        state: {
+          returnToPage: isEditMode ? returnToPage : undefined,
+          action: isEditMode ? "edited" : "added",
+        },
+      });
     } catch (err) {
       toast.error(isEditMode ? "Error updating candidate" : "Error saving candidate");
       console.error(err);
@@ -484,35 +487,57 @@ function AddInterview() {
           </div>
         )}
 
-       {role === "admin" && !isInterviewerEditMode && (
-          <div className="form-row">
-            <Labels text={ResumeLabel} required />
-            <div className="input-wrapper">
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.ppt,.pptx"
-                onChange={handleResumeChange}
-                className={errors.Resume ? "error-input" : ""}
-              />
+ {role === "admin" && !isInterviewerEditMode && (
+    <div className="form-row">
+      <Labels text={ResumeLabel} required />
+      <div className="input-wrapper">
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx,.ppt,.pptx"
+          onChange={handleResumeChange}
+          className={errors.Resume ? "error-input" : ""}
+        />
 
-              {/* Show existing resume name only when editing AND when a path exists */}
-              {isEditMode && formData.ResumePath && (() => {
-                const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
-                const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
+        {/* Show existing resume name only when editing AND when a path exists */}
+        {isEditMode && formData.ResumePath && (() => {
+          const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
+          const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
 
-                return (
-                  <a href={fileUrl} className="existing-resume">
-                    {normalizedPath.split("/").pop()}
-                  </a>
-                );
-              })()}
+          return (
+            <a href={fileUrl} className="existing-resume" target="_blank" rel="noopener noreferrer">
+              {normalizedPath.split("/").pop()}
+            </a>
+          );
+        })()}
 
-              {errors.Resume && (
-                <p className="error-text">{errors.Resume}</p>
-              )}
-            </div>
-          </div>
+        {errors.Resume && (
+          <p className="error-text">{errors.Resume}</p>
         )}
+      </div>
+    </div>
+  )}
+
+  {/* Show resume for interviewer in edit mode as downloadable link */}
+  {isInterviewerEditMode && formData.ResumePath && (() => {
+    const normalizedPath = formData.ResumePath.replace(/\\/g, "/");
+    const fileUrl = `http://127.0.0.1:8000/${normalizedPath}`;
+    const fileName = normalizedPath.split("/").pop() || "Resume";
+   
+    return (
+      <div className="form-row">
+        <Labels text={ResumeLabel} required={false} />
+        <div className="input-wrapper">
+          <input
+            type="text"
+            value={fileName}
+            className="resume-input-like"
+            onClick={() => window.open(fileUrl, "_blank", "noopener,noreferrer")}
+            title="Click to open resume"
+          />
+        </div>
+      </div>
+    );
+  })()}
 
         <div className="form-row">
           <Labels text={ClientNameLabel} required={!isInterviewerEditMode} />
